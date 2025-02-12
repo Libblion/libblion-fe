@@ -6,8 +6,15 @@ import App from './App.vue'
 import router from './router'
 import { pinia } from './services/pinia'
 
+import library from './services/icon'
+
+
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 const app = createApp(App)
 
+
+app.component('font-awesome-icon', FontAwesomeIcon)
 
 app.use(pinia)
 

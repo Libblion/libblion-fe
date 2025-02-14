@@ -16,20 +16,19 @@
 </template>
 
 <script setup>
-import MainLayout from '@/layouts/MainLayout.vue';
-import LandingPage from '@/components/sections/LandingPage.vue';
-import RecomendedBook from '@/components/sections/RecomendedBook.vue';
-import BorrowedBooks from '@/components/sections/BorrowedBooks.vue';
-import MidHero from '@/components/sections/MidHero.vue';
-import OfferBooks from '@/components/sections/OfferBooks.vue';
+import MainLayout from "@/layouts/MainLayout.vue";
+import LandingPage from "@/components/sections/LandingPage.vue";
+import RecomendedBook from "@/components/sections/RecomendedBook.vue";
+import BorrowedBooks from "@/components/sections/BorrowedBooks.vue";
+import MidHero from "@/components/sections/MidHero.vue";
+import OfferBooks from "@/components/sections/OfferBooks.vue";
 
-import { useStore } from '@/stores/test';
-import { onMounted } from 'vue';
+import { useStore } from "@/stores/test";
+import { onMounted } from "vue";
 
-
-const store = useStore()
+const store = useStore();
 
 onMounted(() => {
-  store.someState = "hello world"
-})
+  store.someState = "hello world";
+});
 </script>

@@ -70,18 +70,14 @@
             >
           </p>
         </div>
-        <div class="lg:block md:block hidden">
-          <div>
-            <figure
-              class="shadow-[23px_12px_14px_2px_rgba(0,0,0,0.47)] rounded-md h-[500px]"
-            >
-              <img
-                src="https://i.pinimg.com/564x/cc/f1/74/ccf174731daa832bfc400ac2c602ef56.jpg"
-                class="w-full h-full object-cover rounded-lg"
-                loading="lazy"
-              />
-            </figure>
-          </div>
+        <div class="lg:block md:block hidden h-[500px]">
+          <figure class="shadow-[23px_12px_14px_2px_rgba(0,0,0,0.47)] rounded-md h-full">
+            <img
+              src="https://i.pinimg.com/564x/cc/f1/74/ccf174731daa832bfc400ac2c602ef56.jpg"
+              class="w-full h-full object-cover rounded-lg"
+              loading="lazy"
+            />
+          </figure>
         </div>
       </div>
     </div>

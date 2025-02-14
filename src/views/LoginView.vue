@@ -1,5 +1,7 @@
 <template>
-  <section class="w-screen min-h-screen flex flex-col justify-center">
+  <section
+    class="w-screen min-h-screen flex flex-col justify-center font-poppins"
+  >
     <div class="py-10 px-20">
       <h1
         class="font-extrabold text-3xl lg:text-start md:text-start text-center"
@@ -76,6 +78,7 @@
               <img
                 src="https://i.pinimg.com/564x/cc/f1/74/ccf174731daa832bfc400ac2c602ef56.jpg"
                 class="w-full h-full object-cover rounded-lg"
+                loading="lazy"
               />
             </figure>
           </div>

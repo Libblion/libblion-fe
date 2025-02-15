@@ -11,4 +11,11 @@
         font-family: "Libre Caslon Text", serif;
         font-style: normal;
     }
+
+    .bg-night-green {
+        background-color: #0B1220;
+    }
+    .bg-night-purple {
+        background-color: #0B1220;
+    }
 }

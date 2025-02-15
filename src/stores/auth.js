@@ -15,6 +15,18 @@ export const useAuthStore = defineStore("auth", {
     ],
   }),
   actions: {
+    register(payload) {
+      const availableUser = this.users.find(
+        (user) => user.email === payload.email
+      );
+
+      if (availableUser) {
+        return "Email sudah terdaftar";
+      }
+
+      this.users.push(payload);
+      return router.push("/sign-in");
+    },
     login(payload) {
       const availableUser = this.users.find(
         (user) =>
@@ -26,6 +38,10 @@ export const useAuthStore = defineStore("auth", {
       }
       return router.push("/");
     },
+  },
+
+  logout() {
+    return router.push("/sign-in");
   },
   persist: true,
 });

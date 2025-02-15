@@ -25,7 +25,7 @@
             </h4>
           </div>
 
-          <form @submit.prevent="onHandleSubmit" class="space-y-5 py-5">
+          <form @submit.prevent="onHandleSubmit" class="space-y-5 py-5 flex-1">
             <div class="block">
               <label class="block mb-1 text-start" id="email">Email</label>
               <input
@@ -70,8 +70,10 @@
             >
           </p>
         </div>
-        <div class="lg:block md:block hidden h-[500px]">
-          <figure class="shadow-[23px_12px_14px_2px_rgba(0,0,0,0.47)] rounded-md h-full">
+        <div class="lg:block md:block hidden">
+          <figure
+            class="shadow-[23px_12px_14px_2px_rgba(0,0,0,0.47)] rounded-md h-[500px]"
+          >
             <img
               src="https://i.pinimg.com/564x/cc/f1/74/ccf174731daa832bfc400ac2c602ef56.jpg"
               class="w-full h-full object-cover rounded-lg"
@@ -87,21 +89,10 @@
 <script setup>
 import { computed, reactive, ref } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { useRouter } from "vue-router";
 import { required } from "@vuelidate/validators";
+import { useAuthStore } from "@/stores/auth";
 
-const router = useRouter();
-
-const dummyUser = [
-  {
-    email: "user@example.com",
-    password: "password123",
-  },
-  {
-    email: "user2@example.com",
-    password: "password1234",
-  },
-];
+const store = useAuthStore();
 
 const formData = reactive({
   email: "",
@@ -131,16 +122,10 @@ const onHandleSubmit = () => {
 
   if ($v.value.$invalid) {
     console.log("ini error");
-  }
-
-  const user = dummyUser.find(
-    (user) => user.email === payload.email && user.password === payload.password
-  );
-
-  if (user) {
+  } else {
+    store.login(payload);
     formData.email = "";
     formData.password = "";
-    router.push("/");
   }
 };
 </script>

@@ -1,20 +1,26 @@
 <template>
     <section
-        class="w-full min-h-[85vh] grid grid-cols-6 items-center md:px-16 px-6 font-libre-text gap-6"
+        class="w-full min-h-[85vh] grid grid-cols-6 items-center md:px-16 px-6 font-libre-text gap-6 pt-16 pb-16 md:pt-0 md:pb-0"
     >
-        <div class="col-span-2 space-y-6">
-            <h2 class="text-5xl md:text-6xl font-bold">Find Your Next Book</h2>
-            <p class="text-gray-600 text-lg">
+        <div class="col-span-6 md:col-span-2 space-y-6">
+            <h2 class="text-5xl md:text-6xl font-bold text-center md:text-left">
+                Find Your Next Book
+            </h2>
+            <p class="text-gray-600 text-lg text-center md:text-left">
                 Commodo eiusmod id duis ad cillum ad exercitation magna eiusmod
                 ullamco
             </p>
-            <button
-                class="bg-black cursor-pointer text-white px-6 py-3 text-lg rounded"
-            >
-                Explore Now
-            </button>
+            <div class="flex justify-center md:justify-start">
+                <button
+                    class="bg-black cursor-pointer text-white px-6 py-3 text-lg rounded"
+                >
+                    Explore Now
+                </button>
+            </div>
         </div>
-        <div class="col-span-4 flex justify-center gap-6">
+        <div
+            class="col-span-6 md:col-span-4 flex flex-col md:flex-row justify-center items-center gap-6"
+        >
             <div
                 class="relative w-40 h-72 md:w-48 md:h-80 rounded-b-full overflow-hidden"
             >

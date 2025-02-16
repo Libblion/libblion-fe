@@ -1,18 +1,17 @@
 <template>
-  <section class="border min-h-80 md:p-10 p-4 font-libre-text">
-    <h2 class="text-2xl font-bold mb-6 text-center sm:text-left">
-      Top - 10 Most Borrowed Books
-    </h2>
+  <section class="min-h-80 md:p-10 px-10 max-sm:p-1 font-libre-text">
+    <div class="flex flex-row justify-between px-1 items-center w-full mb-6">
+            <h1 class="text-2xl font-bold max-sm:text-lg">Top - 10 Most Borrowed</h1>
+            <RouterLink to="#">
+                <p class="hover:underline max-sm:text-sm">
+                    See all <font-awesome-icon icon="fa-solid fa-arrow-right" />
+                </p>
+            </RouterLink>
+        </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <CardMostBorrowed
-        v-for="(book, index) in books"
-        :key="index"
-        :image="book.image"
-        :bookName="book.bookName"
-        :author="book.author"
-        :rating="book.rating"
-      />
+      <CardMostBorrowed v-for="(book, index) in books" :key="index" :image="book.image" :bookName="book.bookName"
+        :author="book.author" :rating="book.rating" />
     </div>
   </section>
 </template>

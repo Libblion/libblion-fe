@@ -1,6 +1,13 @@
 <template>
-   <section class="border md:p-10 p-4 flex items-center flex-col justify-center font-libre-text gap-2">
-      <h1 class="font-semibold text-lg w-full">Offers</h1>
+   <section class="md:p-10 px-10 max-sm:p-1 flex items-center flex-col justify-center font-libre-text gap-y-10">
+      <div class="flex flex-row justify-between px-1 items-center w-full">
+            <h1 class="text-2xl font-bold max-sm:text-sm">Borrowed Monthly Books Offer</h1>
+            <RouterLink to="#">
+                <p class="hover:underline max-sm:text-sm">
+                    See all <font-awesome-icon icon="fa-solid fa-arrow-right" />
+                </p>
+            </RouterLink>
+        </div>
       <div class="flex flex-row justify-around gap-x-2 items-center h-full w-full max-sm:text-xs">
          <div class="flex flex-col gap-y-5 items-center">
             <figure class="max-w-64 max-h-90 rounded-t-full grid grid-cols-2 grid-rows-2 overflow-hidden">
@@ -30,7 +37,7 @@
             <p>Available for loan for 42 days</p>
          </div>
       </div>
-      <div class="text-center mt-10">
+      <div class="text-center mt-10 max-sm:mt-1">
          <button class="p-2 px-10 border cursor-pointer hover:bg-slate-100 transition-colors">
             See all
          </button>

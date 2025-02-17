@@ -39,7 +39,7 @@
           <p>
             You have account,
             <span class="font-extrabold"
-              ><router-link href="/sign-in">Sign In</router-link></span
+              ><router-link to="/sign-in">Sign In</router-link></span
             >
           </p>
         </div>

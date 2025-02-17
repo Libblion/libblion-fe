@@ -30,7 +30,7 @@
           <p>
             Dont have acouut,
             <span class="font-extrabold"
-              ><router-link href="/sign-up">Sign Up</router-link></span
+              ><router-link to="/sign-up">Sign Up</router-link></span
             >
           </p>
         </div>

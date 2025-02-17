@@ -1,47 +1,167 @@
 import { defineStore } from "pinia";
 import router from "@/router";
+import { api } from "@/services/api";
+import { toast } from "vue3-toastify";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    users: [
-      {
-        email: "user@example.com",
-        password: "password123",
-      },
-      {
-        email: "user2@example.com",
-        password: "password1234",
-      },
-    ],
+    isLoading: false,
+    isGenerate: false,
+    error: null,
+    token: null,
+    currentUser: null,
   }),
   actions: {
-    register(payload) {
-      const availableUser = this.users.find(
-        (user) => user.email === payload.email
-      );
+    async register(payload) {
+      this.isLoading = true;
+      this.error = null;
 
-      if (availableUser) {
-        return "Email sudah terdaftar";
+      try {
+        const response = await api.post("/auth/register", payload);
+        const {
+          data: { message },
+        } = response;
+
+        toast.success(message);
+        setTimeout(() => {
+          return router.push("/sign-in");
+        }, 2500);
+      } catch (error) {
+        this.error = error.response?.data?.message || "Something went wrong";
+        toast.error(this.error);
+      } finally {
+        this.isLoading = false;
       }
-
-      this.users.push(payload);
-      return router.push("/sign-in");
     },
-    login(payload) {
-      const availableUser = this.users.find(
-        (user) =>
-          user.email === payload.email && user.password === payload.password
-      );
+    async login(payload) {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const response = await api.post("/auth/login", payload);
+        const {
+          data: { token, user, message },
+        } = response;
 
-      if (!availableUser) {
-        return "Email Atau password salah";
+        this.token = token;
+        this.currentUser = user;
+
+        if (user.email_verified_at === null) {
+          toast.warning("Harap verifikasi email Anda terlebih dahulu!");
+          setTimeout(() => {
+            return router.push("/verify-account");
+          }, 2500);
+          return;
+        }
+
+        toast.success(message);
+        setTimeout(() => {
+          return router.push("/");
+        }, 2500);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.error);
+      } finally {
+        this.isLoading = false;
       }
-      return router.push("/");
+    },
+
+    async logout() {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const response = await api.post("/auth/logout", null, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
+        const { data } = response;
+
+        this.token = null;
+        this.currentUser = null;
+
+        toast.success(data.message);
+        setTimeout(() => {
+          return router.push("/sign-in");
+        }, 2500);
+      } catch (error) {
+        toast.error(error.response?.data?.error || "Something went wrong");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async userLogged() {
+      if (!this.token) {
+        throw new Error("No token found");
+      }
+
+      try {
+        const response = await api.get("/auth/me", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        });
+
+        const { data } = response;
+        this.currentUser = data.user;
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async verifyAccount(payload) {
+      this.isLoading = true;
+      this.error = null;
+      try {
+        const response = await api.post(
+          "/auth/account-verification",
+          { otp: payload },
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        this.userLogged();
+        toast.success(response.data.message);
+        setTimeout(() => {
+          router.push("/");
+        }, 2500);
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Something went wrong");
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async generateOtp(payload) {
+      this.isGenerate = true;
+      this.error = null;
+      try {
+        const response = await api.post(
+          "/auth/generate-otp-code",
+          { email: payload },
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+
+        toast.success(response.data.message);
+      } catch (error) {
+        this.error = error.response?.data?.message || "Something went wrong";
+        toast.error(this.error);
+      } finally {
+        this.isGenerate = false;
+      }
     },
   },
 
-  logout() {
-    return router.push("/sign-in");
+  persist: {
+    pick: ["token", "currentUser"],
   },
-  persist: true,
 });

@@ -1,26 +1,32 @@
-import './assets/main.css'
+import "./assets/main.css";
 
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
-import App from './App.vue'
-import router from './router'
-import { pinia } from './services/pinia'
-import Vue3EasyDataTable from 'vue3-easy-data-table';
-import 'vue3-easy-data-table/dist/style.css';
+import App from "./App.vue";
+import router from "./router";
+import { pinia } from "./services/pinia";
+import Vue3EasyDataTable from "vue3-easy-data-table";
+import "vue3-easy-data-table/dist/style.css";
+import library from "./services/icon";
+import Vue3Toastify from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
-import library from './services/icon'
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+const app = createApp(App);
 
+app.component("EasyDataTable", Vue3EasyDataTable);
 
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+app.component("font-awesome-icon", FontAwesomeIcon);
 
-const app = createApp(App)
+app.use(Vue3Toastify, {
+  autoClose: 2000,
+  position: "top-right",
+  theme: "auto",
+});
 
-app.component('EasyDataTable', Vue3EasyDataTable);
-app.component('font-awesome-icon', FontAwesomeIcon)
+app.use(pinia);
 
-app.use(pinia)
+app.use(router);
 
-app.use(router)
-
-app.mount('#app')
+app.mount("#app");

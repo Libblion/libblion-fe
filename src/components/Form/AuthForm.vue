@@ -9,7 +9,13 @@
         v-model="formData.username"
         class="rounded ring-1 py-2 px-2 ring-gray-900 lg:w-[70%] w-full"
       />
-      <p v-if="$v.username.$error" class="text-red-500">Username tidak valid</p>
+      <p
+        v-for="(error, idx) in $v.username.$errors"
+        :key="idx"
+        class="text-red-500"
+      >
+        {{ error.$message }}
+      </p>
     </div>
     <div class="block">
       <label class="block mb-1 text-start" id="email">Email</label>
@@ -20,7 +26,13 @@
         v-model="formData.email"
         class="rounded ring-1 py-2 px-2 ring-gray-900 lg:w-[70%] w-full"
       />
-      <p v-if="$v.email.$error" class="text-red-500">Email tidak valid</p>
+      <p
+        v-for="(error, idx) in $v.email.$errors"
+        :key="idx"
+        class="text-red-500"
+      >
+        {{ error.$message }}
+      </p>
     </div>
     <div class="block">
       <label class="block mb-1 text-start" id="password">Password</label>
@@ -31,8 +43,12 @@
         v-model="formData.password"
         class="rounded ring-1 py-2 px-2 ring-gray-900 lg:w-[70%] w-full"
       />
-      <p v-if="$v.password.$error" class="text-red-500">
-        Password wajib diisi dan minimal 6 karakter
+      <p
+        v-for="(error, idx) in $v.password.$errors"
+        :key="idx"
+        class="text-red-500"
+      >
+        {{ error.$message }}
       </p>
     </div>
 
@@ -44,20 +60,28 @@
         type="password"
         placeholder="confirmPassword"
         name="confirmPassword"
-        v-model="formData.confirmPassword"
+        v-model="formData.password_confirmation"
         class="rounded ring-1 py-2 px-2 ring-gray-900 lg:w-[70%] w-full"
       />
-      <p v-if="$v.confirmPassword.$error" class="text-red-500">
-        Password tidak sama
+      <p
+        v-for="(error, idx) in $v.password_confirmation.$errors"
+        :key="idx"
+        class="text-red-500"
+      >
+        {{ error.$message }}
       </p>
     </div>
 
     <div>
       <button
         type="submit"
-        class="bg-black py-2 px-8 text-white lg:w-[30%] w-full rounded-2xl cursor-pointer"
+        :class="[
+          'bg-black py-2 px-8 text-white lg:w-[30%] w-full rounded-2xl cursor-pointer',
+          { 'opacity-50 cursor-not-allowed': authStore.isLoading },
+        ]"
       >
-        {{ mode === "login" ? "Sign In" : "Sign Up" }}
+        <span v-if="authStore.isLoading">Loading...</span>
+        <span v-else>{{ mode === "login" ? "Sign In" : "Sign Up" }}</span>
       </button>
     </div>
   </form>
@@ -67,6 +91,8 @@
 import { computed, reactive } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import { useAuthStore } from "@/stores/auth";
+const authStore = useAuthStore();
 
 const props = defineProps({
   mode: {
@@ -81,7 +107,7 @@ const formData = reactive({
   username: "",
   email: "",
   password: "",
-  confirmPassword: "",
+  password_confirmation: "",
 });
 
 const rules = computed(() => {
@@ -93,7 +119,7 @@ const rules = computed(() => {
     password: {
       required,
     },
-    confirmPassword: props.mode === "register" ? { required } : {},
+    password_confirmation: props.mode === "register" ? { required } : {},
   };
 });
 
@@ -107,9 +133,7 @@ const handleSubmit = () => {
 
   $v.value.$touch();
 
-  if ($v.value.$invalid) {
-    console.log("ini error");
-  }
+  if ($v.value.$invalid) return;
 
   emit("submit", payload);
 };

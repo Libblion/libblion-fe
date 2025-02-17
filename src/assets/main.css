@@ -18,4 +18,23 @@
     .bg-night-purple {
         background-color: #0B1220;
     }
+    .bg-yellow-tint{
+        background-color: #FFB22C;
+    }
+
+    .text-yellow-tint{
+        color: #FFB22C;
+    }
+    .text-purple-tint{
+        color: #B771E5;
+    }
+    .text-indigo-tint{
+        color: #7886C7;
+    }
+    .text-pink-tint{
+        color: #E195AB;
+    }
+    .text-blue-tint{
+        color: #578FCA;
+    }
 }

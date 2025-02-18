@@ -52,7 +52,7 @@
                                 Borrowed
                             </p>
                         </h1>
-                        <button class="border w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10">
+                        <button class="border w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm">
                             Borrow
                         </button>
                     </div>

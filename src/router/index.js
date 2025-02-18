@@ -5,6 +5,7 @@ import DashboardView from "@/views/admin/DashboardView.vue";
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyAccount from "@/views/auth/VerifyAccount.vue";
+import MainLayoutView from "@/views/user/MainLayoutView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path : '/book',
+      name : 'books',
+      component : MainLayoutView
+    }
   ],
 });
 

@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from "vue";
 import { Bar, Pie, Line, Doughnut } from "vue-chartjs";
 import {
   Chart as ChartJS,

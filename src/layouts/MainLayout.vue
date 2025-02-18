@@ -8,6 +8,6 @@
 </template>
 
 <script setup>
-import NavbarUser from "@/components/sections/NavbarUser.vue";
+import NavbarUser from "@/components/navigation/NavbarUser.vue";
 import FooterUser from "@/components/sections/FooterUser.vue";
 </script>

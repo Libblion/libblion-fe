@@ -10,6 +10,7 @@ export const useAuthStore = defineStore("auth", {
     error: null,
     token: null,
     currentUser: null,
+    isLogged : false
   }),
   actions: {
     async register(payload) {
@@ -162,6 +163,6 @@ export const useAuthStore = defineStore("auth", {
   },
 
   persist: {
-    pick: ["token", "currentUser"],
+    pick: ["token", "currentUser","isLogged"],
   },
 });

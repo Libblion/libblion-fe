@@ -6,11 +6,9 @@ import AdminLayout from "@/layouts/AdminLayout.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyAccount from "@/views/auth/VerifyAccount.vue";
 import MainLayoutView from "@/views/user/MainLayoutView.vue";
-<<<<<<< HEAD
-import { useLoadingStore } from "@/stores/loadingStore";
-=======
 import DashboardBorrowingView from "@/views/admin/DashboardBorrowingView.vue";
->>>>>>> cfc5844005ba98111b62abb036648c6efabe5f5f
+
+import { useLoadingStore } from "@/stores/loadingStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

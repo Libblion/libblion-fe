@@ -2,7 +2,7 @@
     <section class="min-h-80 flex flex-col gap-y-10 font-libre-text md:px-10">
         <div class="flex flex-row justify-between px-1">
             <h1 class="text-2xl font-bold max-sm:text-lg">Recomended Books</h1>
-            <RouterLink to="#">
+            <RouterLink to="/books">
                 <p class="hover:underline max-sm:text-md">
                     See all <font-awesome-icon icon="fa-solid fa-arrow-right" />
                 </p>

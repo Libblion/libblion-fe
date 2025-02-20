@@ -2,7 +2,7 @@
   <section class="min-h-80 md:p-10 px-10 max-sm:p-1 font-libre-text">
     <div class="flex flex-row justify-between px-1 items-center w-full mb-6">
       <h1 class="text-2xl font-bold max-sm:text-lg">Top - 10 Most Borrowed</h1>
-      <RouterLink to="#">
+      <RouterLink to="/books">
         <p class="hover:underline max-sm:text-sm">
           See all <font-awesome-icon icon="fa-solid fa-arrow-right" />
         </p>

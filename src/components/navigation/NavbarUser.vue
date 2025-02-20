@@ -14,9 +14,9 @@
 
     <!-- Desktop Menu -->
     <div class="hidden md:flex space-x-6 text-lg font-poppins">
-      <a href="#" class="hover:underline">Books</a>
-      <a href="#" class="hover:underline" v-if="!isLogged">Categories</a>
-      <a href="#" class="hover:underline">About Us</a>
+      <RouterLink to="/books">Books</RouterLink>
+      <RouterLink v-if="!isLogged">Categories</RouterLink>
+      <RouterLink>About Us</RouterLink>
     </div>
 
     <!-- Search and Login Section -->
@@ -59,9 +59,9 @@
       <div
         class="flex flex-col items-center space-y-4 py-4 text-lg font-poppins"
       >
-        <a href="#" class="hover:underline">Books</a>
-        <a href="#" class="hover:underline" v-if="!isLogged">Categories</a>
-        <a href="#" class="hover:underline">About Us</a>
+        <RouterLink to="/books">Books</RouterLink>
+        <RouterLink v-if="!isLogged">Categories</RouterLink>
+        <RouterLink>About Us</RouterLink>
       </div>
     </div>
   </nav>

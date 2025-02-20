@@ -55,7 +55,7 @@ const router = createRouter({
       ],
     },
     {
-      path: "/book",
+      path: "/books",
       name: "books",
       component: MainLayoutView,
     },

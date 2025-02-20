@@ -60,6 +60,7 @@
 <script setup>
 import { api } from "@/services/api";
 import { useAuthStore } from "@/stores/auth";
+import { useLoadingStore } from "@/stores/loadingStore";
 import { ref } from "vue";
 import { onMounted } from "vue";
 import { toast } from "vue3-toastify";
@@ -99,6 +100,7 @@ const headers = [
 const items = ref([]);
 const isOpenModal = ref(false);
 const selectedBorrowingId = ref(null);
+const loading = useLoadingStore()
 
 const stores = useAuthStore();
 
@@ -117,6 +119,8 @@ const handleGetBorrowing = async () => {
     items.value = data.data;
   } catch (error) {
     console.log(error);
+  }finally{
+    loading.stop()
   }
 };
 

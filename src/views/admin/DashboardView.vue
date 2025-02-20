@@ -37,6 +37,8 @@ import MostBorrowed from '@/components/admin/dashboard/MostBorrowed.vue';
 import BorrowedBook from '@/components/admin/dashboard/BorrowedBook.vue';
 import OverdueBook from '@/components/admin/dashboard/OverdueBook.vue';
 import HistoryBookLoan from '@/components/admin/dashboard/HistoryBookLoan.vue';
+import { onMounted } from 'vue';
+import { useLoadingStore } from '@/stores/loadingStore';
 
 const dummyDataInfo = [
   {
@@ -64,5 +66,10 @@ const dummyDataInfo = [
     textColor : 'text-blue-tint'
   },
 ]
+
+const loading = useLoadingStore()
+onMounted(()=>{
+  loading.stop()
+})
 
 </script>

@@ -4,14 +4,14 @@
             <!-- Rekomendation Most Borrowed Books -->
             <h1 class="pl-4 text-3xl font-bold p-10">Most Borrowed Books</h1>
             <section class="grid grid-cols-2 grid-flow- items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
-                <div v-for="borrowed in mostBorrowed" class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full">
-                    <figure class="overflow-hidden md:w-64 sm:w-full">
-                        <img :src="borrowed.cover" alt="cover-image">
+                <div v-for="(borrowed,i) in  recommend.most_borrowed_books ? recommend.most_borrowed_books : mostBorrowed" class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full">
+                    <figure class="overflow-hidden md:w-full sm:w-full">
+                        <img :src="i % 2 == 0 ? cover6 : cover5" alt="cover-image">
                     </figure>
                    <div class="flex flex-col justify-evenly w-full">
                     <div class="pl-2">
                         <h1 class="text-sm font-semibold sm:text-2xl">{{ borrowed.title }}</h1>
-                        <h2 class="text-[12px] sm:text-lg">By : {{ borrowed.author }}</h2>
+                        <h2 class="text-[12px] sm:text-lg">By : {{ borrowed.author?.first_name ?? borrowed.author }}</h2>
                     </div>
                     <div class="pl-2 text-[10px] sm:text-[14px]">
                         <p>
@@ -38,7 +38,7 @@
                             </span>
                             :
                             <span>
-                                {{ borrowed.year }}
+                                {{ borrowed.release_year ?? borrowed.year }}
                             </span>
                         </p>
                     </div>
@@ -46,7 +46,7 @@
                     <div class="flex justify-end items-end gap-x-2 px-2 py-1 sm:flex-col ">
                         <h1 class="text-center w-24 text-sm">
                             <p class="text-xl font-bold">
-                                {{ borrowed.borrowed }}
+                                {{ borrowed.borrowings_count }}
                             </p>
                             <p>
                                 Borrowed
@@ -61,21 +61,21 @@
             <!-- Recomendation Books -->
              <h1 class="pl-4 text-3xl font-bold p-10">Recomendation Books</h1>
             <section class="grid max-md:grid-rows-3 gap-y-2 p-2 lg:grid-cols-3 gap-x-3 mb-10">
-                <div v-for="recommend in recommendationBooks" class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit">
+                <div v-for="(recommend,i) in recommend.recommended_books ? recommend.recommended_books : recommendationBooks" class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit">
                     <figure class="w-1/2">
-                        <img :src="recommend.cover" alt="image-cover">
+                        <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
                     </figure>
                     <div class="flex flex-col gap-y-2 lg:justify-evenly lg:gap-y-4">
                         <div>
                             <h1 class="text-md font-bold lg:text-xl">{{ recommend.title }}</h1>
-                            <h2 class="text-[12px] lg:text-lg">By : {{ recommend.author }}</h2>
-                            <small>
-                                {{ recommend.summary }}
+                            <h2 class="text-[12px] lg:text-lg">By : {{ `${recommend.author.first_name} ${recommend.author.last_name}` }}</h2>
+                            <small class="block max-w-96">
+                                {{ recommend.description.length > 50 ? `${recommend.description.slice(0,50)}...` : recommend.description }}
                             </small>
                         </div>
                         <div class="flex flex-row justify-between pr-2">
                             <small class="font-bold text-[8px]lg:text-sm">
-                                {{ recommend.year }}
+                                {{ recommend.release_year }}
                             </small>
                             <button class="border rounded-md text-[10px] p-1 lg:w-24 lg:h-10">
                                 Borrow
@@ -105,12 +105,12 @@
                 </div>
             </section>
             <!-- List Books -->
-            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10">
-                <div v-for="book in allBooks" class="flex flex-col gap-y-1 shadow-md">
+            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto">
+                <div v-for="(book,i) in books" class="flex flex-col gap-y-1 shadow-md">
                     <figure class="w-36 lg:w-64">
-                        <img :src="book.cover" alt="image-cover">
+                        <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
                     </figure>
-                    <h1 class="font-bold px-4">{{ book.title }}</h1>
+                    <h1 class="font-bold px-4">{{ book.title.length > 15 ? `${book.title.slice(0,10)}...` : book.title }}</h1>
                     <div class="flex flex-row justify-between p-4">
                         <button class="border p-1 rounded-md text-sm lg:w-40 h-12">
                             Borrow
@@ -127,109 +127,48 @@
 
 <script setup>
 import MainLayout from '@/layouts/MainLayout.vue';
-import cover1 from '@/assets/images/cover/Cover1.png'
 import cover2 from '@/assets/images/cover/Cover2.jpg'
 import cover3 from '@/assets/images/cover/Cover3.jpg'
-import cover4 from '@/assets/images/cover/Cover4.jpg'
 import cover5 from '@/assets/images/cover/Cover5.jpg'
 import cover6 from '@/assets/images/cover/Cover6.jpg'
 import cover7 from '@/assets/images/cover/Cover7.jpg'
 import cover8 from '@/assets/images/cover/Cover8.png'
 
-const mostBorrowed = [
-    {
-        title: 'Book 1',
-        cover: cover6,
-        author: 'Anas Nasuha',
-        borrowed: 100,
-        totalPage: 100,
-        lang: 'Indonesia',
-        year: 2025
-    },
-    {
-        title: 'Book 2',
-        cover: cover4,
-        author: 'Just Najib',
-        borrowed: 99,
-        totalPage: 120,
-        lang: 'Indonesia',
-        year: 2025
-    },
-]
+import { bookStore } from "@/stores/bookStore";
+import { computed, onMounted, ref } from "vue";
+import { useLoadingStore } from '@/stores/loadingStore';
 
+const storeBooks = bookStore()
 
-const recommendationBooks = [
-    {
-        title: 'Book 1',
-        cover: cover1,
-        author: 'Rahman Hayadi',
-        summary: ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, quisquam!',
-        year: 2025
-    },
-    {
-        title: 'Book 2',
-        cover: cover8,
-        author: 'Mochammad Galih',
-        summary: ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, quisquam!',
-        year: 2025
-    },
-    {
-        title: 'Book 3',
-        cover: cover7,
-        author: 'Aziz Nurulloh',
-        summary: ' Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, quisquam!',
-        year: 2024
-    },
-]
+const books = computed(()=>{
+    return storeBooks.getAllBooks
+})
 
-const allBooks = [
-    {
-        title: 'Book 1',
-        cover: cover1,
-        author: 'Anas Nasuha',
-        year: 2025
-    },
-    {
-        title: 'Book 2',
-        cover: cover2,
-        author: 'Just Najib',
-        year: 2025
-    },
-    {
-        title: 'Book 3',
-        cover: cover3,
-        author: 'Anas Nasuha',
-        year: 2025
-    },
-    {
-        title: 'Book 4',
-        cover: cover4,
-        author: 'Rahman hayadi',
-        year: 2025
-    },
-    {
-        title: 'Book 5',
-        cover: cover5,
-        author: 'Mochammad Galih',
-        year: 2025
-    },
-    {
-        title: 'Book 6',
-        cover: cover6,
-        author: 'Anas Nasuha',
-        year: 2025
-    },
-    {
-        title: 'Book 7',
-        cover: cover7,
-        author: 'Just Najib',
-        year: 2025
-    },
-    {
-        title: 'Book 8',
-        cover: cover8,
-        author: 'Anas Nasuha',
-        year: 2025
-    },
-]
+const recommend = ref([])
+
+const recommendationBooks = async ()=>{
+    try {
+        const response = await storeBooks.getRecommendedBooks()
+        console.log(response)
+        recommend.value = response.data
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
+}
+
+const loading = useLoadingStore()
+
+onMounted( async ()=>{
+    try {
+        await Promise.all([
+            storeBooks.getBooks(),
+            recommendationBooks()
+        ]);
+    } catch (error) {
+        console.error("Error in onMounted:", error);
+    }finally{
+        loading.stop()
+    }
+})
 </script>

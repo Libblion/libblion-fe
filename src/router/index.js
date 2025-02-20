@@ -6,6 +6,7 @@ import AdminLayout from "@/layouts/AdminLayout.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyAccount from "@/views/auth/VerifyAccount.vue";
 import MainLayoutView from "@/views/user/MainLayoutView.vue";
+import { useLoadingStore } from "@/stores/loadingStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,5 +53,17 @@ const router = createRouter({
     }
   ],
 });
+
+
+
+router.beforeEach((to, from, next) => {
+  const loadingStore = useLoadingStore();
+  const excludeRoutes = ["home", "login", "register","verify-account"];
+  if (!excludeRoutes.includes(to.name)) {
+    loadingStore.start();
+  }
+  next();
+});
+
 
 export default router;

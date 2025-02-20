@@ -10,8 +10,8 @@
                     </figure>
                    <div class="flex flex-col justify-evenly w-full">
                     <div class="pl-2">
-                        <h1 class="text-sm font-semibold sm:text-2xl">{{ borrowed.title }}</h1>
-                        <h2 class="text-[12px] sm:text-lg">By : {{ borrowed.author?.first_name ?? borrowed.author }}</h2>
+                        <h1 class="text-sm font-semibold sm:text-2xl">{{ borrowed.title.length > 12 ? `${borrowed.title.slice(0,20)}...` : borrowed.title }}</h1>
+                        <h2 class="text-[12px] sm:text-lg">By : {{ `${borrowed.author?.first_name} ${borrowed.author?.last_name}` ?? borrowed.author }}</h2>
                     </div>
                     <div class="pl-2 text-[10px] sm:text-[14px]">
                         <p>
@@ -44,7 +44,7 @@
                     </div>
                    </div>
                     <div class="flex justify-end items-end gap-x-2 px-2 py-1 sm:flex-col ">
-                        <h1 class="text-center w-24 text-sm">
+                        <h1 class="text-center w-24 text-sm  max-sm:text-[10px]">
                             <p class="text-xl font-bold">
                                 {{ borrowed.borrowings_count }}
                             </p>
@@ -52,7 +52,7 @@
                                 Borrowed
                             </p>
                         </h1>
-                        <button class="border w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm">
+                        <button class="bg-night-green text-white hover:bg-slate-800 transition-colors  w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm">
                             Borrow
                         </button>
                     </div>
@@ -65,19 +65,19 @@
                     <figure class="w-1/2">
                         <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
                     </figure>
-                    <div class="flex flex-col gap-y-2 lg:justify-evenly lg:gap-y-4">
-                        <div>
+                    <div class="flex flex-col gap-y-2 lg:between lg:gap-y-4 pb-2">
+                        <div class="lg:h-full flex justify-center flex-col">
                             <h1 class="text-md font-bold lg:text-xl">{{ recommend.title }}</h1>
                             <h2 class="text-[12px] lg:text-lg">By : {{ `${recommend.author.first_name} ${recommend.author.last_name}` }}</h2>
                             <small class="block max-w-96">
                                 {{ recommend.description.length > 50 ? `${recommend.description.slice(0,50)}...` : recommend.description }}
                             </small>
                         </div>
-                        <div class="flex flex-row justify-between pr-2">
+                        <div class="flex flex-row justify-between max-sm:pr-2 items-center">
                             <small class="font-bold text-[8px]lg:text-sm">
                                 {{ recommend.release_year }}
                             </small>
-                            <button class="border rounded-md text-[10px] p-1 lg:w-24 lg:h-10">
+                            <button class="bg-night-green text-white hover:bg-slate-800 transition-colors rounded-md text-[10px] p-1 w-18 h-8 lg:w-24 lg:h-10 lg:text-sm cursor-pointer">
                                 Borrow
                             </button>
                         </div>
@@ -112,11 +112,11 @@
                     </figure>
                     <h1 class="font-bold px-4">{{ book.title.length > 15 ? `${book.title.slice(0,10)}...` : book.title }}</h1>
                     <div class="flex flex-row justify-between p-4">
-                        <button class="border p-1 rounded-md text-sm lg:w-40 h-12">
+                        <button class="bg-night-green text-white hover:bg-slate-800 transition-colors p-1 rounded-md text-sm md:w-20 lg: w-40 h-10 max-md:w-12 max-md:h-8 max-md:text-[10px] cursor-pointer">
                             Borrow
                         </button>
                         <small class="font-bold lg:text-md flex items-center">
-                            {{ book.year }}
+                            {{ book.release_year }}
                         </small>
                     </div>
                 </div>

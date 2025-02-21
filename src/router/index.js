@@ -7,6 +7,7 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyAccount from "@/views/auth/VerifyAccount.vue";
 import MainLayoutView from "@/views/user/MainLayoutView.vue";
 import DashboardBorrowingView from "@/views/admin/DashboardBorrowingView.vue";
+import ProfileView from "@/views/user/ProfileView.vue";
 
 import { useLoadingStore } from "@/stores/loadingStore";
 
@@ -59,19 +60,21 @@ const router = createRouter({
       name: "books",
       component: MainLayoutView,
     },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfileView,
+    },
   ],
 });
 
-
-
 router.beforeEach((to, from, next) => {
   const loadingStore = useLoadingStore();
-  const excludeRoutes = ["home", "login", "register","verify-account"];
+  const excludeRoutes = ["home", "login", "register", "verify-account"];
   if (!excludeRoutes.includes(to.name)) {
     loadingStore.start();
   }
   next();
 });
-
 
 export default router;

@@ -10,7 +10,7 @@ export const useAuthStore = defineStore("auth", {
     error: null,
     token: null,
     currentUser: null,
-    isLogged : false
+    isLogged: false,
   }),
   actions: {
     async register(payload) {
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore("auth", {
         }, 2500);
       } catch (error) {
         console.log(error);
-        toast.error(error.response?.data?.error);
+        toast.error("Something went wrong your Email / password");
       } finally {
         this.isLoading = false;
       }
@@ -165,6 +165,6 @@ export const useAuthStore = defineStore("auth", {
   },
 
   persist: {
-    pick: ["token", "currentUser","isLogged"],
+    pick: ["token", "currentUser", "isLogged"],
   },
 });

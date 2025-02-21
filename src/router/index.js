@@ -7,6 +7,7 @@ import RegisterView from "@/views/auth/RegisterView.vue";
 import VerifyAccount from "@/views/auth/VerifyAccount.vue";
 import MainLayoutView from "@/views/user/MainLayoutView.vue";
 import DashboardBorrowingView from "@/views/admin/DashboardBorrowingView.vue";
+import DashboardCategory from "@/views/admin/DashboardCategory.vue";
 import ProfileView from "@/views/user/ProfileView.vue";
 
 import { useLoadingStore } from "@/stores/loadingStore";
@@ -52,6 +53,11 @@ const router = createRouter({
           path: "borrowing-list",
           name: "borrowing-list",
           component: DashboardBorrowingView,
+        },
+        {
+          path: "category",
+          name: "admin-category",
+          component: DashboardCategory,
         },
       ],
     },

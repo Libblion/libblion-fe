@@ -1,48 +1,55 @@
 <template>
+    <ModalFormBorrow />
     <MainLayout>
         <template #content>
             <!-- Rekomendation Most Borrowed Books -->
             <h1 class="pl-4 text-3xl font-bold p-10">Most Borrowed Books</h1>
-            <section class="grid grid-cols-2 grid-flow- items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
-                <div v-for="(borrowed,i) in  recommend.most_borrowed_books ? recommend.most_borrowed_books : mostBorrowed" class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full">
+            <section
+                class="grid grid-cols-2 grid-flow- items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
+                <div v-for="(borrowed, i) in recommend.most_borrowed_books"
+                    class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full">
                     <figure class="overflow-hidden md:w-full sm:w-full">
                         <img :src="i % 2 == 0 ? cover6 : cover5" alt="cover-image">
                     </figure>
-                   <div class="flex flex-col justify-evenly w-full">
-                    <div class="pl-2">
-                        <h1 class="text-sm font-semibold sm:text-2xl">{{ borrowed.title.length > 12 ? `${borrowed.title.slice(0,20)}...` : borrowed.title }}</h1>
-                        <h2 class="text-[12px] sm:text-lg">By : {{ `${borrowed.author?.first_name} ${borrowed.author?.last_name}` ?? borrowed.author }}</h2>
+                    <div class="flex flex-col justify-evenly w-full">
+                        <div class="pl-2">
+                            <h1 class="text-sm font-semibold sm:text-2xl">
+                                {{ borrowed.title.length > 12 ? `${borrowed.title.slice(0, 20)}...` : borrowed.title }}
+                            </h1>
+                            <h2 class="text-[12px] sm:text-lg">By :
+                                {{ `${borrowed.author?.first_name} ${borrowed.author?.last_name}` ?? borrowed.author }}
+                            </h2>
+                        </div>
+                        <div class="pl-2 text-[10px] sm:text-[14px]">
+                            <p>
+                                <span>
+                                    Page
+                                </span>
+                                :
+                                <span>
+                                    {{ borrowed.totalPage }}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    Language
+                                </span>
+                                :
+                                <span>
+                                    {{ borrowed.lang }}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    Year
+                                </span>
+                                :
+                                <span>
+                                    {{ borrowed.release_year ?? borrowed.year }}
+                                </span>
+                            </p>
+                        </div>
                     </div>
-                    <div class="pl-2 text-[10px] sm:text-[14px]">
-                        <p>
-                            <span>
-                                Page
-                            </span>
-                            :
-                            <span>
-                                {{ borrowed.totalPage }}
-                            </span>
-                        </p>
-                        <p>
-                            <span>
-                                Language
-                            </span>
-                            :
-                            <span>
-                                {{ borrowed.lang }}
-                            </span>
-                        </p>
-                        <p>
-                            <span>
-                                Year
-                            </span>
-                            :
-                            <span>
-                                {{ borrowed.release_year ?? borrowed.year }}
-                            </span>
-                        </p>
-                    </div>
-                   </div>
                     <div class="flex justify-end items-end gap-x-2 px-2 py-1 sm:flex-col ">
                         <h1 class="text-center w-24 text-sm  max-sm:text-[10px]">
                             <p class="text-xl font-bold">
@@ -52,32 +59,47 @@
                                 Borrowed
                             </p>
                         </h1>
-                        <button class="bg-night-green text-white hover:bg-slate-800 transition-colors  w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm">
+                        <button
+                            class="bg-night-green text-white hover:bg-slate-800 transition-colors  w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm"
+                            @click="detailBooks({
+                                title: borrowed.title,
+                                author: `${borrowed.author.first_name} ${borrowed.author.last_name}`,
+                                cover: i % 2 == 0 ? cover6 : cover5,
+                            })">
                             Borrow
                         </button>
                     </div>
                 </div>
             </section>
             <!-- Recomendation Books -->
-             <h1 class="pl-4 text-3xl font-bold p-10">Recomendation Books</h1>
+            <h1 class="pl-4 text-3xl font-bold p-10">Recomendation Books</h1>
             <section class="grid max-md:grid-rows-3 gap-y-2 p-2 lg:grid-cols-3 gap-x-3 mb-10">
-                <div v-for="(recommend,i) in recommend.recommended_books ? recommend.recommended_books : recommendationBooks" class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit">
+                <div v-for="(recommend, i) in recommend.recommended_books"
+                    class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit">
                     <figure class="w-1/2">
                         <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
                     </figure>
                     <div class="flex flex-col gap-y-2 lg:between lg:gap-y-4 pb-2">
                         <div class="lg:h-full flex justify-center flex-col">
                             <h1 class="text-md font-bold lg:text-xl">{{ recommend.title }}</h1>
-                            <h2 class="text-[12px] lg:text-lg">By : {{ `${recommend.author.first_name} ${recommend.author.last_name}` }}</h2>
+                            <h2 class="text-[12px] lg:text-lg">By :
+                                {{ `${recommend.author.first_name} ${recommend.author.last_name}` }}</h2>
                             <small class="block max-w-96">
-                                {{ recommend.description.length > 50 ? `${recommend.description.slice(0,50)}...` : recommend.description }}
+                                {{ recommend.description.length > 50 ? `${recommend.description.slice(0, 50)}...` : recommend.description }}
                             </small>
                         </div>
-                        <div class="flex flex-row justify-between max-sm:pr-2 items-center">
+                        <div class="flex flex-row justify-between max-sm:pr-2 items-center px-2">
                             <small class="font-bold text-[8px]lg:text-sm">
                                 {{ recommend.release_year }}
                             </small>
-                            <button class="bg-night-green text-white hover:bg-slate-800 transition-colors rounded-md text-[10px] p-1 w-18 h-8 lg:w-24 lg:h-10 lg:text-sm cursor-pointer">
+                            <button
+                                class="bg-night-green text-white hover:bg-slate-800 transition-colors rounded-md text-[10px] p-1 w-18 h-8 lg:w-24 lg:h-10 lg:text-sm cursor-pointer"
+                                @click="detailBooks({
+                                    title: recommend.title,
+                                    author: `${recommend.author.first_name} ${recommend.author.last_name}`,
+                                    cover: i % 2 == 0 ? cover2 : cover3,
+                                    description: recommend.description
+                                })">
                                 Borrow
                             </button>
                         </div>
@@ -86,9 +108,10 @@
             </section>
             <!-- Categories -->
             <section class="flex flex-wrap justify-center gap-4 lg:justify-around mb-10">
-                <div v-for="category in 6" class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg">
+                <div v-for="category in getCategories"
+                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer">
                     <small>
-                        Catgory {{ category }}
+                        {{ category.name }}
                     </small>
                 </div>
             </section>
@@ -106,13 +129,21 @@
             </section>
             <!-- List Books -->
             <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto">
-                <div v-for="(book,i) in books" class="flex flex-col gap-y-1 shadow-md">
+                <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md">
                     <figure class="w-36 lg:w-64">
                         <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
                     </figure>
-                    <h1 class="font-bold px-4">{{ book.title.length > 15 ? `${book.title.slice(0,10)}...` : book.title }}</h1>
+                    <h1 class="font-bold px-4">
+                        {{ book.title.length > 15 ? `${book.title.slice(0, 10)}...` : book.title }}</h1>
                     <div class="flex flex-row justify-between p-4">
-                        <button class="bg-night-green text-white hover:bg-slate-800 transition-colors p-1 rounded-md text-sm md:w-20 lg: w-40 h-10 max-md:w-12 max-md:h-8 max-md:text-[10px] cursor-pointer">
+                        <button
+                            class="bg-night-green text-white hover:bg-slate-800 transition-colors p-1 rounded-md text-sm md:w-20 lg: w-40 h-10 max-md:w-12 max-md:h-8 max-md:text-[10px] cursor-pointer"
+                            @click="detailBooks({
+                                title: book.title,
+                                author: `${book.author.first_name} ${book.author.last_name}`,
+                                cover: i % 2 == 0 ? cover8 : cover7,
+                                description : book.description
+                            })">
                             Borrow
                         </button>
                         <small class="font-bold lg:text-md flex items-center">
@@ -127,6 +158,7 @@
 
 <script setup>
 import MainLayout from '@/layouts/MainLayout.vue';
+import ModalFormBorrow from '@/components/modal/ModalFormBorrow.vue';
 import cover2 from '@/assets/images/cover/Cover2.jpg'
 import cover3 from '@/assets/images/cover/Cover3.jpg'
 import cover5 from '@/assets/images/cover/Cover5.jpg'
@@ -137,16 +169,23 @@ import cover8 from '@/assets/images/cover/Cover8.png'
 import { bookStore } from "@/stores/bookStore";
 import { computed, onMounted, ref } from "vue";
 import { useLoadingStore } from '@/stores/loadingStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useStore } from '@/stores/util'
 
+const store = useStore()
 const storeBooks = bookStore()
+const category = useCategoryStore()
 
-const books = computed(()=>{
+const detailBooks = store.detailBooks
+const getCategories = computed(() => category.categories)
+
+const books = computed(() => {
     return storeBooks.getAllBooks
 })
 
 const recommend = ref([])
 
-const recommendationBooks = async ()=>{
+const recommendationBooks = async () => {
     try {
         const response = await storeBooks.getRecommendedBooks()
         console.log(response)
@@ -159,7 +198,7 @@ const recommendationBooks = async ()=>{
 
 const loading = useLoadingStore()
 
-onMounted( async ()=>{
+onMounted(async () => {
     try {
         await Promise.all([
             storeBooks.getBooks(),
@@ -167,8 +206,9 @@ onMounted( async ()=>{
         ]);
     } catch (error) {
         console.error("Error in onMounted:", error);
-    }finally{
+    } finally {
         loading.stop()
     }
 })
+
 </script>

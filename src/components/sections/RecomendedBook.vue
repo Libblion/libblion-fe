@@ -18,7 +18,7 @@
                 <div class="flex flex-row  text-stone-400 text-sm gap-x-1 max-sm:text-[10px]">
                     <font-awesome-icon v-for="rate in book.rate" icon="fa-solid fa-star" />
                 </div>
-                <button class="bg-night-purple text-white h-14 w-40 rounded-md max-sm:h-6 max-sm:w-18 max-sm:text-xs">
+                <button class="bg-night-purple text-white h-14 w-40 rounded-md max-sm:h-6 max-sm:w-18 max-sm:text-xs cursor-pointer" @click="detailBooks(book)">
                     Borrow
                 </button>
             </div>
@@ -27,6 +27,9 @@
 </template>
 
 <script setup>
+import { bookStore } from '@/stores/bookStore'
+import { storeToRefs } from 'pinia'
+
 import cover5 from '../../assets/images/cover/Cover5.jpg'
 import cover6 from '../../assets/images/cover/Cover6.jpg'
 import cover7 from '../../assets/images/cover/Cover7.jpg'
@@ -58,4 +61,11 @@ const books = [
         cover: cover8
     },
 ]
+
+import { useStore } from '@/stores/util'
+
+const store = useStore()
+
+const detailBooks = store.detailBooks
+
 </script>

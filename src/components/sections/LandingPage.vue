@@ -11,11 +11,13 @@
                 ullamco
             </p>
             <div class="flex justify-center md:justify-start">
-                <button
+                <RouterLink to="/books">
+                    <button
                     class="bg-black cursor-pointer text-white px-6 py-3 text-lg rounded"
                 >
                     Explore Now
                 </button>
+                </RouterLink>
             </div>
         </div>
         <div

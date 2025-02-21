@@ -23,7 +23,7 @@
       </div>
 
       <button
-        class="mt-3 bg-black text-white px-4 py-2 rounded-sm"
+        class="mt-3 bg-black text-white px-4 py-2 rounded-sm cursor-pointer" @click="detailBooks(books)"
       >
         Borrow
       </button>
@@ -32,10 +32,23 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   image: String,
   bookName: String,
   author: String,
   rating: Number,
 });
+import { useStore } from '@/stores/util'
+import { computed } from 'vue';
+
+const store = useStore()
+
+const detailBooks = store.detailBooks
+
+const books = computed (()=>({
+  title : props.bookName,
+  cover : props.image,
+  author : props.author
+}))
+
 </script>

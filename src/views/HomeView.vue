@@ -1,10 +1,11 @@
 <template>
+  <ModalFormBorrow/>
   <MainLayout>
     <template #content>
       <!-- Landing Page -->
       <LandingPage />
       <!-- Recommended book content -->
-      <RecomendedBook />
+      <RecomendedBook/>
       <!-- Mid hero -->
       <MidHero />
       <!-- Offer books-->
@@ -23,12 +24,13 @@ import BorrowedBooks from "@/components/sections/BorrowedBooks.vue";
 import MidHero from "@/components/sections/MidHero.vue";
 import OfferBooks from "@/components/sections/OfferBooks.vue";
 
-import { useStore } from "@/stores/test";
-import { onMounted } from "vue";
+import { useStore } from "@/stores/util";
+import { onMounted,ref } from "vue";
+import ModalFormBorrow from "@/components/modal/ModalFormBorrow.vue";
 
 const store = useStore();
 
 onMounted(() => {
-  store.someState = "hello world";
+  
 });
 </script>

@@ -3,7 +3,8 @@ import { defineStore } from "pinia"
 
 export const bookStore = defineStore('books',{
     state : ()=>({
-        books : []
+        books : [],
+        detailBook : {},
     }),
     actions : {
         async getBooks (){
@@ -37,5 +38,7 @@ export const bookStore = defineStore('books',{
     getters : {
         getAllBooks : (state) => state.books
     },
-    persist : true
+    persist : {
+        pick : ['books']
+    }
 })

@@ -15,8 +15,8 @@
     <!-- Desktop Menu -->
     <div class="hidden md:flex space-x-6 text-lg font-poppins">
       <RouterLink to="/books">Books</RouterLink>
-      <RouterLink v-if="!isLogged">Categories</RouterLink>
-      <RouterLink>About Us</RouterLink>
+      <RouterLink to="#" v-if="!isLogged">Categories</RouterLink>
+      <RouterLink to="#">About Us</RouterLink>
     </div>
 
     <!-- Search and Login Section -->
@@ -60,8 +60,8 @@
         class="flex flex-col items-center space-y-4 py-4 text-lg font-poppins"
       >
         <RouterLink to="/books">Books</RouterLink>
-        <RouterLink v-if="!isLogged">Categories</RouterLink>
-        <RouterLink>About Us</RouterLink>
+        <RouterLink to="#" v-if="!isLogged">Categories</RouterLink>
+        <RouterLink to="#">About Us</RouterLink>
       </div>
     </div>
   </nav>
@@ -69,6 +69,7 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
+import { useCategoryStore } from "@/stores/categoryStore";
 import { storeToRefs } from "pinia";
 import { ref, onMounted, onUnmounted } from "vue";
 const menuOpen = ref(false);
@@ -89,12 +90,17 @@ const closeMenu = (event) => {
 
 const {isLogged} = storeToRefs(stores)
 
-onMounted(()=>{
-  isLogged.value = true
-})
-
+const categories = useCategoryStore()
+const getCategories = async ()=>{
+  try {
+    const response = await categories.getCategories()
+  } catch (error) {
+    
+  }
+}
 
 onMounted(() => {
+  getCategories()
   document.addEventListener("click", closeMenu);
 });
 

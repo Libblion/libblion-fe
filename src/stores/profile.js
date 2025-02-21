@@ -5,6 +5,7 @@ import { useAuthStore } from "./auth";
 export const useProfileStore = defineStore("profile", {
   state: () => ({
     profile: [],
+    isLoading: false,
   }),
 
   actions: {
@@ -20,6 +21,24 @@ export const useProfileStore = defineStore("profile", {
         this.profile = data.user;
       } catch (error) {
         console.log(error);
+      }
+    },
+
+    async updateProfile(formData) {
+      this.isLoading = true;
+      const stores = useAuthStore();
+      try {
+        const { data } = await api.post("/profile", formData, {
+          headers: {
+            Authorization: `Bearer ${stores.token}`,
+          },
+        });
+
+        this.profile = data.user.profile;
+      } catch (error) {
+        console.log("error", error);
+      } finally {
+        this.isLoading = false;
       }
     },
   },

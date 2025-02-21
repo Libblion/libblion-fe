@@ -22,7 +22,7 @@
             @click="openModal(props.id)"
             class="text-green-400 rounded-xl px-2 shadow cursor-pointer"
           >
-            <font-awesome-icon icon="fa-solid fa-check" />
+           
           </button>
         </template>
       </EasyDataTable>

@@ -1,77 +1,93 @@
 <template>
   <MainLayout>
     <template #content>
-      <section class="max-w-full flex flex-col gap-4 px-10 py-5">
-        <div class="flex flex-col items-center mx-auto">
-          <figure class="w-28 h-28">
-            <img
-              :src="imgProfile"
-              alt="test"
-              class="w-full h-full object-cover rounded-full"
-            />
-          </figure>
+      <section
+        class="max-w-full flex flex-col gap-4 px-10 font-libre-text py-5"
+      >
+        <div class="w-full shadow-md rounded-md px-2 py-4">
+          <div class="flex lg:flex-row md:flex-row flex-col gap-4">
+            <div class="max-w-max">
+              <figure class="w-36 mb-4">
+                <img
+                  :src="
+                    profile.profile?.image || 'https://via.placeholder.com/150'
+                  "
+                  alt="test"
+                  class="w-full h-full object-cover rounded-lg"
+                />
+              </figure>
+              <p
+                class="p-2 px-4 bg-green-400 text-white text-center rounded-lg"
+              >
+                {{ profile.role.name }}
+              </p>
+            </div>
 
-          <div class="flex flex-col items-center">
-            <h1 class="text-3xl font-bold mb-2">{{ profile?.username }}</h1>
-            <p
-              class="text-sm bg-green-500 text-white mb-2 rounded-xl py-2 px-4"
-            >
-              {{ profile?.role?.name }}
-            </p>
+            <div class="bg-black text-white w-full px-4 py-2">
+              <div class="flex flex-col gap-2">
+                <h1 class="text-3xl font-bold">
+                  Welcome,
+                  <span class="font-extrabold">
+                    {{ profile.profile?.firstname ?? "undefined" }}
+                    {{ profile.profile?.lastname ?? "" }}</span
+                  >
+                </h1>
+
+                <div class="flex-1">
+                  <div class="mb-3">
+                    <p>
+                      Age:
+                      <span> {{ profile.profile?.age ?? "undefined" }}</span>
+                    </p>
+                  </div>
+                  <div class="mb-3">
+                    <p>
+                      Address:
+                      <span>
+                        {{ profile.profile?.address ?? "undefined" }}</span
+                      >
+                    </p>
+                  </div>
+                  <div class="mb-3">
+                    <p>
+                      Phone Number:
+                      <span>
+                        {{ profile.profile?.phone_number ?? "undefined" }}</span
+                      >
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      Email:
+                      <span> {{ profile.email ?? "undefined" }}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
-          <div class="max-w-full shadow-md p-2">
-            <h1 class="font-bold text-xl mb-2">List Borrowing User</h1>
-            <EasyDataTable
-              :headers="headers"
-              :items="tableData"
-              table-class-name="customize-table"
-            />
+        <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
+          <div class="max-w-full flex flex-col h-full shadow-md p-2">
+            <h1 class="font-bold text-xl text-center py-4">
+              List Borrowing User
+            </h1>
+
+            <div class="flex-1">
+              <EasyDataTable
+                :headers="headers"
+                :items="tableData"
+                table-class-name="customize-table "
+              />
+            </div>
           </div>
           <div class="shadow-md w-full p-2">
-            <h1 class="text-center font-libre-text mb-2">Edit Your Profile</h1>
+            <h1 class="font-bold text-xl text-center font-libre-text py-4">
+              Edit Your Profile
+            </h1>
 
-            <form class="flex-1">
-              <div class="block mb-2">
-                <input
-                  class="border rounded py-2 px-4 w-full border-black"
-                  type="text"
-                  name="username"
-                  placeholder="Username"
-                />
-              </div>
-              <div class="block mb-2">
-                <input
-                  class="border rounded py-2 px-4 w-full border-black"
-                  type="email"
-                  name="email"
-                  placeholder="email"
-                />
-              </div>
-              <div class="block mb-2">
-                <input
-                  class="border rounded py-2 px-4 w-full border-black"
-                  type="file"
-                  name="username"
-                  placeholder="Username"
-                />
-              </div>
-              <div class="block mb-2">
-                <textarea
-                  class="border rounded py-2 px-4 w-full border-black"
-                  placeholder="Summary"
-                ></textarea>
-              </div>
-
-              <button
-                class="border bg-black text-white rounded py-2 px-4 w-full"
-                type="submit"
-              >
-                Submit
-              </button>
-            </form>
+            <FormProfile @submit="handleSubmit" />
           </div>
         </div>
       </section>
@@ -81,11 +97,12 @@
 
 <script setup>
 import MainLayout from "@/layouts/MainLayout.vue";
-import imgProfile from "@/assets/images/profile/laravel.jpg";
 import { useLoadingStore } from "@/stores/loadingStore";
 import { computed, onMounted } from "vue";
 import { useProfileStore } from "@/stores/profile";
 import { storeToRefs } from "pinia";
+import FormProfile from "@/components/Form/FormProfile.vue";
+import { toast } from "vue3-toastify";
 const loading = useLoadingStore();
 const profileStore = useProfileStore();
 const { profile } = storeToRefs(profileStore);
@@ -115,6 +132,31 @@ const headers = [
     value: "status",
   },
 ];
+
+const handleSubmit = async (payload) => {
+  const formData = new FormData();
+  formData.append("firstname", payload.fname);
+  formData.append("lastname", payload.lname);
+  formData.append("age", payload.age);
+  formData.append("phone_number", payload.pnumber);
+  formData.append("address", payload.address);
+
+  if (payload.image) {
+    formData.append("image", payload.image);
+  }
+
+  await profileStore.updateProfile(formData);
+  await profileStore.getProfile();
+
+  payload.fname = "";
+  payload.lname = "";
+  payload.age = "";
+  payload.pnumber = "";
+  payload.address = "";
+  payload.image = null;
+
+  toast.success("Data berhasil diperbarui");
+};
 
 const tableData = computed(() => {
   if (!profile.value || !profile.value.borrowings) return [];
@@ -155,3 +197,4 @@ onMounted(async () => {
   --easy-table-body-row-hover-background-color: rgba(255, 255, 255, 0.431);
 }
 </style>
+

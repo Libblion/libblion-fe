@@ -62,7 +62,7 @@
                         <button
                             class="bg-night-green text-white hover:bg-slate-800 transition-colors  w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm"
                             @click="detailBooks({
-                               ...borrowed,
+                                ...borrowed,
                                 cover: i % 2 == 0 ? cover6 : cover5,
                             })">
                             Borrow
@@ -80,7 +80,7 @@
                     </figure>
                     <div class="flex flex-col gap-y-2 lg:between lg:gap-y-4 pb-2">
                         <div class="lg:h-full flex justify-center flex-col">
-                            <h1 class="text-md font-bold lg:text-xl">{{ recommend.title }}</h1>
+                            <h1 class="text-md font-bold lg:text-xl">{{ recommend.title.length > 10 ? `${recommend.title.slice(0,10)}...` : recommend.title }}</h1>
                             <h2 class="text-[12px] lg:text-lg">By :
                                 {{ `${recommend.author.first_name} ${recommend.author.last_name}` }}</h2>
                             <small class="block max-w-96">
@@ -94,7 +94,7 @@
                             <button
                                 class="bg-night-green text-white hover:bg-slate-800 transition-colors rounded-md text-[10px] p-1 w-18 h-8 lg:w-24 lg:h-10 lg:text-sm cursor-pointer"
                                 @click="detailBooks({
-                                   ...recommend,
+                                    ...recommend,
                                     cover: i % 2 == 0 ? cover2 : cover3,
                                 })">
                                 Borrow
@@ -105,8 +105,16 @@
             </section>
             <!-- Categories -->
             <section class="flex flex-wrap justify-center gap-4 lg:justify-around mb-10">
+                <div
+                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer"
+                    @click="categoryBooks(null)">
+                    <small>
+                        All
+                    </small>
+                </div>
                 <div v-for="category in getCategories"
-                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer">
+                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer"
+                    @click="categoryBooks(category.id)">
                     <small>
                         {{ category.name }}
                     </small>
@@ -116,17 +124,22 @@
             <section class="p-2 mb-2 lg:pl-[140px]">
                 <div class="w-1/2 max-md:w-full">
                     <label for="search" class="relative">
-                        <input type="text" id="search" placeholder="search book here..."
+                        <input v-model="search" type="text" id="search" placeholder="search book here..."
                             class="border rounded-md h-10  pl-5 w-full">
-                        <button class="absolute top-0 right-4">
+                        <button class="absolute top-0 right-4" @click="search = ''">
                             <font-awesome-icon icon="fa-solid fa-xmark" />
                         </button>
                     </label>
                 </div>
             </section>
             <!-- List Books -->
-            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto h-screen text-white bg-black">
-                <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md bg-white/30">
+            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto max-h-screen text-white bg-black">
+                <div v-if="isLoading" class="flex justify-center items-center">
+                    <span class="animate-spin text-4xl">
+                        <font-awesome-icon icon="fa-solid fa-spinner" />
+                    </span>
+                </div>
+                <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md bg-white/30" v-else>
                     <figure class="w-36 lg:w-64">
                         <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
                     </figure>
@@ -141,10 +154,11 @@
                             })">
                             Borrow
                         </button>
-                        <small class="font-bold lg:text-md flex items-center">
+                        <small class="font-bold lg:text-md flex items-center mb-2">
                             {{ book.release_year }}
                         </small>
                     </div>
+                    <small class="bg-red-700 p-1 flex justify-center items-center">{{ book.category.name }}</small>
                 </div>
             </section>
         </template>
@@ -162,7 +176,7 @@ import cover7 from '@/assets/images/cover/Cover7.jpg'
 import cover8 from '@/assets/images/cover/Cover8.png'
 
 import { bookStore } from "@/stores/bookStore";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useLoadingStore } from '@/stores/loadingStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useStore } from '@/stores/util'
@@ -192,6 +206,33 @@ const recommendationBooks = async () => {
 }
 
 const loading = useLoadingStore()
+const isLoading = ref(false)
+
+const categoryBooks = async (id) => {
+    isLoading.value = true
+    try {
+        await storeBooks.getBooks(id)
+    } catch (error) {
+        console.log(error);
+    } finally {
+        isLoading.value = false
+    }
+}
+
+const search = ref('')
+
+watch(()=>search.value,async ()=>{
+    try {
+        isLoading.value = true
+        return await storeBooks.getBooks(null,search.value)
+    } catch (error) {
+        console.log(error);
+        
+    }finally{
+        isLoading.value = false
+    }
+})
+
 
 onMounted(async () => {
     try {
@@ -209,7 +250,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-::-webkit-scrollbar{
+::-webkit-scrollbar {
     width: 0px;
 }
 </style>

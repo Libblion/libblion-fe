@@ -7,9 +7,14 @@ export const bookStore = defineStore('books',{
         detailBook : {},
     }),
     actions : {
-        async getBooks (){
+        async getBooks (id,search){
             try {
-                const response = await api.get('/books')
+                const response = await api.get('/books',{
+                    params : {
+                        category_id : id,
+                        search
+                    }
+                })
 
                 const {data,message} = response.data
                 

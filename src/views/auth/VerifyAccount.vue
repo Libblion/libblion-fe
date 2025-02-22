@@ -55,7 +55,7 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 const stores = useAuthStore();
 const otp = ref("");

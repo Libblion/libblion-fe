@@ -7,7 +7,7 @@ import RegisterView from '@/views/auth/RegisterView.vue';
 import VerifyAccount from '@/views/auth/VerifyAccount.vue';
 import MainLayoutView from '@/views/user/MainLayoutView.vue';
 import DashboardBorrowingView from '@/views/admin/DashboardBorrowingView.vue';
-import DashboardCategory from '@/views/admin/DashboardCategory.vue';
+import DashboardCategoryView from '@/views/admin/DashboardCategoryView.vue';
 import ProfileView from '@/views/user/ProfileView.vue';
 import DashboardAuthorView from '@/views/admin/DashboardAuthorView.vue';
 import DashboardBookView from '@/views/admin/DashboardBookView.vue';
@@ -74,7 +74,7 @@ const router = createRouter({
         {
           path: 'category',
           name: 'admin-category',
-          component: DashboardCategory,
+          component: DashboardCategoryView,
         },
       ],
     },

@@ -1,44 +1,51 @@
 <template>
-  <section>
-    <div class="flex justify-between">
-      <h1 class="text-3xl mb-6 font-bold">Category</h1>
+  <section class="container mx-auto font-poppins">
+    <div class="bg-[#0b1220] rounded-xl p-6 mt-10">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-white">Category List</h1>
+        <button
+          @click="openCreateModal"
+          class="bg-purple-500 hover:bg-purple-600 text-[#FFFFFF] px-4 py-2 rounded-lg cursor-pointer transition-colors"
+        >
+          Add Category
+        </button>
+      </div>
 
-      <button
-        @click="openCreateModal"
-        class="w-24 border h-8 rounded-md bg-blue-600 text-xs text-white"
-      >
-        Add Category
-      </button>
-    </div>
-
-    <div class="w-full">
-      <EasyDataTable
-        :headers="headers"
-        :items="categories.categories"
-        :rows-per-page="10"
-        show-index
-      >
-        <template #loading>
-          <img
-            src="https://i.pinimg.com/originals/94/fd/2b/94fd2bf50097ade743220761f41693d5.gif"
-            style="width: 100px; height: 80px"
-          />
-        </template>
-        <template #item-actions="props">
-          <button
-            @click="openEditModal(props)"
-            class="bg-yellow-500  hover:bg-yellow-600 transition text-white px-2 py-1 rounded mr-2"
-          >
-            <font-awesome-icon icon="fa-solid fa-pencil" /> Edit
-          </button>
-          <button
-            @click="openModalDelete(props.id)"
-            class="bg-red-500  hover:bg-red-600 transition text-white px-2 py-1 rounded"
-          >
-            <font-awesome-icon icon="fa-solid fa-trash" /> Delete
-          </button>
-        </template>
-      </EasyDataTable>
+      <div class="w-full">
+        <EasyDataTable
+          :headers="headers"
+          :items="categories.categories"
+          :rows-per-page="10"
+          theme-color="#1d90ff"
+          table-class-name="customize-table"
+          header-text-direction="center"
+          body-text-direction="center"
+          show-index
+        >
+          <template #loading>
+            <img
+              src="https://i.pinimg.com/originals/94/fd/2b/94fd2bf50097ade743220761f41693d5.gif"
+              style="width: 100px; height: 80px"
+            />
+          </template>
+          <template #item-actions="props">
+            <div class="flex gap-3 justify-center">
+              <button
+                @click="openEditModal(props)"
+                class="bg-purple-500 hover:bg-purple-600 p-2 rounded-lg text-white cursor-pointer transition-colors"
+              >
+                <font-awesome-icon icon="fa-solid fa-pencil" />
+              </button>
+              <button
+                @click="openModalDelete(props.id)"
+                class="bg-purple-500 hover:bg-purple-600 p-2 rounded-lg text-white cursor-pointer transition-colors"
+              >
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </button>
+            </div>
+          </template>
+        </EasyDataTable>
+      </div>
     </div>
 
     <div
@@ -81,18 +88,18 @@
 <script setup>
 import { ref, onMounted, provide } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import { useCategoryStore } from "@/stores/categoryStore";
 import { api } from "@/services/api";
 import { toast } from "vue3-toastify";
-import ModalCategory from "./ModalCategory.vue";
+import ModalCategory from "../../components/modal/ModalCategory.vue";
 
-const stores = useAuthStore();
-import { useCategoryStore } from "@/stores/categoryStore";
-const categories = useCategoryStore();
 const headers = [
   { text: "Category", value: "name" },
   { text: "Actions", value: "actions" },
 ];
 
+const stores = useAuthStore();
+const categories = useCategoryStore();
 const modalRef = ref(null);
 
 const isOpenModalDelete = ref(false);

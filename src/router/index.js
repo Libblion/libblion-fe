@@ -13,6 +13,8 @@ import DashboardAuthorView from '@/views/admin/DashboardAuthorView.vue';
 import DashboardBookView from '@/views/admin/DashboardBookView.vue';
 
 import { useLoadingStore } from '@/stores/loadingStore';
+import NotFoundView from '@/views/NotFoundView.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,7 @@ const router = createRouter({
       name: 'admin',
       component: AdminLayout,
       redirect: { name: 'dashboard' },
+      meta: { requiresAuth: true },
       children: [
         {
           path: 'dashboard',
@@ -84,10 +87,25 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: { requiresAuth: true },
+      
     },
+    { path: '/:pathMatch(.*)*', component: NotFoundView },
   ],
 });
 
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore(); 
+  const isLogged = auth.isLogged;
+
+  if (to.meta.requiresAuth && !isLogged) {
+    next({ name: 'login' });
+  } else if (isLogged && (to.name === 'login' || to.name === 'register' || to.name === 'verify-account')) {
+    next({ name: 'home' });
+  } else {
+    next();
+  }
+});
 router.beforeEach((to, from, next) => {
   const loadingStore = useLoadingStore();
   const excludeRoutes = ['home', 'login', 'register', 'verify-account'];
@@ -96,5 +114,6 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
+
 
 export default router;

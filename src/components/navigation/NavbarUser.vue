@@ -21,7 +21,10 @@
 
     <!-- Search and Login Section -->
     <div class="flex items-center space-x-6 mt-2 md:mt-0">
-      <div class="relative flex items-center border-b border-black w-64" v-if="!isLogged">
+      <div
+        class="relative flex items-center border-b border-black w-64"
+        v-if="!isLogged"
+      >
         <span class="text-black px-3">
           <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
         </span>
@@ -32,6 +35,19 @@
         />
       </div>
       <div class="h-10 w-0.5 bg-black hidden md:block" v-if="!isLogged"></div>
+
+      <router-link
+        to="/profile"
+        v-if="stores.currentUser"
+        :class="[
+          'bg-black text-white font-poppins px-4 py-2 rounded',
+          stores.currentUser
+            ? 'cursor-pointer'
+            : 'cursor-not-allowed pointer-events-none',
+        ]"
+      >
+        <font-awesome-icon icon="fa-solid fa-user" />
+      </router-link>
 
       <router-link
         to="/sign-in"
@@ -88,19 +104,17 @@ const closeMenu = (event) => {
   }
 };
 
-const {isLogged} = storeToRefs(stores)
+const { isLogged } = storeToRefs(stores);
 
-const categories = useCategoryStore()
-const getCategories = async ()=>{
+const categories = useCategoryStore();
+const getCategories = async () => {
   try {
-    const response = await categories.getCategories()
-  } catch (error) {
-    
-  }
-}
+    const response = await categories.getCategories();
+  } catch (error) {}
+};
 
 onMounted(() => {
-  getCategories()
+  getCategories();
   document.addEventListener("click", closeMenu);
 });
 

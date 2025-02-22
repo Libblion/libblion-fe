@@ -8,7 +8,7 @@
           <img :src="profileImg" alt="profile-image" />
         </figure>
         <p class="text-black">
-          {{ "Anas Nasuha".length > 11 ? "Anas Nasuha..." : "Anas Nasuha" }}
+          {{ 'Anas Nasuha'.length > 11 ? 'Anas Nasuha...' : 'Anas Nasuha' }}
         </p>
         <button
           class="text-black w-12 h-full rounded-full cursor-pointer hover:bg-slate-50 -rotate-45"
@@ -36,24 +36,37 @@
 </template>
 
 <script setup>
-import profileImg from "@/assets/images/profile/laravel.jpg";
+  import profileImg from '@/assets/images/profile/laravel.jpg';
 
-const menus = [
-  {
-    name: "Dashboard",
-    icon: "fa-solid fa-chart-column",
-    route: "/admin/dashboard",
-  },
+  const menus = [
+    {
+      name: 'Dashboard',
+      icon: 'fa-solid fa-chart-column',
+      route: '/admin/dashboard',
+    },
 
-  {
-    name: "Borrow List",
-    icon: "fa-solid fa-table-list",
-    route: "/admin/borrowing-list",
-  },
-  {
-    name: "Category",
-    icon: "fa-solid fa-tags",
-    route: "/admin/category",
-  },
-];
+    {
+      name: 'Borrow List',
+      icon: 'fa-solid fa-table-list',
+      route: '/admin/borrowing-list',
+    },
+
+    {
+      name: 'Book',
+      icon: 'fa-solid fa-book',
+      route: '/admin/book-list',
+    },
+
+    {
+      name: 'Author',
+      icon: 'fa-solid fa-user',
+      route: '/admin/author-list',
+    },
+
+    {
+      name: 'Category',
+      icon: 'fa-solid fa-tags',
+      route: '/admin/category',
+    },
+  ];
 </script>

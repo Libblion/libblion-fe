@@ -9,12 +9,15 @@
             </RouterLink>
         </div>
         <div class="flex flex-row justify-evenly max-sm:justify-center gap-1">
+            <span class="text-4xl animate-spin" v-if="isLoading">
+                <font-awesome-icon icon="fa-solid fa-spinner" />
+            </span>
             <div v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px]">
                 <figure class="max-w-64 max-sm:w-[92px]">
-                    <img :src="book.cover" alt="cover-img">
+                    <img :src="cover11" alt="cover-img">
                 </figure>
-                <h1 class="font-semibold max-sm:text-xs">{{ book.title }}</h1>
-                <h2 class="text-sm  max-sm:text-xs">By : {{ book.author }}</h2>
+                <h1 class="font-semibold max-sm:text-xs">{{ book.title.length > 10 ? `${book.title.slice(0,10)}...` : book.title }}</h1>
+                <h2 class="text-sm  max-sm:text-xs">By : {{ `${book.author.first_name} ${book.author.last_name}` }}</h2>
                 <div class="flex flex-row  text-stone-400 text-sm gap-x-1 max-sm:text-[10px]">
                     <font-awesome-icon v-for="rate in book.rate" icon="fa-solid fa-star" />
                 </div>
@@ -30,42 +33,36 @@
 import { bookStore } from '@/stores/bookStore'
 import { storeToRefs } from 'pinia'
 
-import cover5 from '../../assets/images/cover/Cover5.jpg'
-import cover6 from '../../assets/images/cover/Cover6.jpg'
-import cover7 from '../../assets/images/cover/Cover7.jpg'
-import cover8 from '../../assets/images/cover/Cover8.png'
-
-const books = [
-    {
-        title: "Book 1",
-        author: "Galih Nasuha",
-        rate: 5,
-        cover: cover5
-    },
-    {
-        title: "Book 1",
-        author: "Najib Nasuha",
-        rate: 5,
-        cover: cover6
-    },
-    {
-        title: "Book 1",
-        author: "Rahman Nasuha",
-        rate: 5,
-        cover: cover7
-    },
-    {
-        title: "Book 1",
-        author: "Anas Nasuha",
-        rate: 5,
-        cover: cover8
-    },
-]
+import cover11 from '../../assets/images/cover/Cover11.png'
 
 import { useStore } from '@/stores/util'
+import { onMounted, ref } from 'vue'
 
 const store = useStore()
+const storeBooks = bookStore()
 
 const detailBooks = store.detailBooks
+
+const books = ref([])
+const isLoading = ref(false)
+
+
+const getRecommendBooks = async ()=>{
+    isLoading.value = true
+    try {
+        const response = await storeBooks.getRecommendedBooks(0,4)
+        console.log(response.data);
+        books.value = response.data.recommended_books
+    } catch (error) {
+        console.log(error);
+        
+    }finally{
+        isLoading.value = false
+    }
+}
+
+onMounted(()=>{
+    getRecommendBooks()
+})
 
 </script>

@@ -24,9 +24,15 @@ export const bookStore = defineStore('books',{
                 throw error
             }
         },
-        async getRecommendedBooks (){
+        async getRecommendedBooks (skip,limit){
             try {
-                const response = await api.get('/books/most/recommended')
+                const response = await api.get('/books/most/recommended',{
+                    params : {
+                        skip,
+                        limit
+                    }
+                })
+                
                 return response.data
                 
             } catch (error) {

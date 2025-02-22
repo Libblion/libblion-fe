@@ -129,6 +129,7 @@ export const useAuthStore = defineStore("auth", {
         );
 
         this.userLogged();
+        this.isLogged = true
         toast.success(response.data.message);
         setTimeout(() => {
           router.push("/");

@@ -12,7 +12,7 @@
     <!-- Detail -->
     <div class="w-full sm:w-3/4 p-4 text-center sm:text-left">
       <h3 class="text-xl font-semibold md:mb-2">{{ bookName }}</h3>
-      <p class="text-sm text-gray-700">By: {{ author }}</p>
+      <p class="text-sm text-gray-700">By: {{ `${author.first_name} ${author.last_name}` }}</p>
 
       <!-- Rating -->
       <div class="flex justify-center sm:justify-start">
@@ -35,7 +35,7 @@
 const props = defineProps({
   image: String,
   bookName: String,
-  author: String,
+  author: {},
   rating: Number,
 });
 import { useStore } from '@/stores/util'

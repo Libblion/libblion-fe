@@ -62,8 +62,7 @@
                         <button
                             class="bg-night-green text-white hover:bg-slate-800 transition-colors  w-full rounded-md h-8 text-[10px] cursor-pointer lg:w-24 lg:h-10 lg:text-sm"
                             @click="detailBooks({
-                                title: borrowed.title,
-                                author: `${borrowed.author.first_name} ${borrowed.author.last_name}`,
+                               ...borrowed,
                                 cover: i % 2 == 0 ? cover6 : cover5,
                             })">
                             Borrow
@@ -95,10 +94,8 @@
                             <button
                                 class="bg-night-green text-white hover:bg-slate-800 transition-colors rounded-md text-[10px] p-1 w-18 h-8 lg:w-24 lg:h-10 lg:text-sm cursor-pointer"
                                 @click="detailBooks({
-                                    title: recommend.title,
-                                    author: `${recommend.author.first_name} ${recommend.author.last_name}`,
+                                   ...recommend,
                                     cover: i % 2 == 0 ? cover2 : cover3,
-                                    description: recommend.description
                                 })">
                                 Borrow
                             </button>
@@ -116,11 +113,11 @@
                 </div>
             </section>
             <!-- Search Input -->
-            <section class="p-2 mb-10">
-                <div class="w-full">
+            <section class="p-2 mb-2 lg:pl-[140px]">
+                <div class="w-1/2 max-md:w-full">
                     <label for="search" class="relative">
-                        <input type="text" id="search" placeholder="search here..."
-                            class="border rounded-full h-10 lg:h-12 pl-5 w-full">
+                        <input type="text" id="search" placeholder="search book here..."
+                            class="border rounded-md h-10  pl-5 w-full">
                         <button class="absolute top-0 right-4">
                             <font-awesome-icon icon="fa-solid fa-xmark" />
                         </button>
@@ -128,21 +125,19 @@
                 </div>
             </section>
             <!-- List Books -->
-            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto">
-                <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md">
+            <section class="flex flex-wrap p-2 gap-4 justify-center mb-10 overflow-y-auto h-screen text-white bg-black">
+                <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md bg-white/30">
                     <figure class="w-36 lg:w-64">
                         <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
                     </figure>
-                    <h1 class="font-bold px-4">
+                    <h1 class="font-light px-4">
                         {{ book.title.length > 15 ? `${book.title.slice(0, 10)}...` : book.title }}</h1>
                     <div class="flex flex-row justify-between p-4">
                         <button
                             class="bg-night-green text-white hover:bg-slate-800 transition-colors p-1 rounded-md text-sm md:w-20 lg: w-40 h-10 max-md:w-12 max-md:h-8 max-md:text-[10px] cursor-pointer"
                             @click="detailBooks({
-                                title: book.title,
-                                author: `${book.author.first_name} ${book.author.last_name}`,
+                                ...book,
                                 cover: i % 2 == 0 ? cover8 : cover7,
-                                description : book.description
                             })">
                             Borrow
                         </button>
@@ -212,3 +207,9 @@ onMounted(async () => {
 })
 
 </script>
+
+<style scoped>
+::-webkit-scrollbar{
+    width: 0px;
+}
+</style>

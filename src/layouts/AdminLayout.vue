@@ -14,7 +14,6 @@
 
     <!-- Konten utama -->
     <section class="row-start-2 col-span-1 lg:col-start-2 min-h-screen max-lg:px-5 font-poppin">
-
       <header class="flex flex-row gap-x-2 items-center">
         <div class="w-full">
           <label for="search" class="relative">

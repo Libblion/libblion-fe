@@ -19,7 +19,7 @@
               <p
                 class="p-2 px-4 bg-green-400 text-white text-center rounded-lg"
               >
-                {{ profile.role.name }}
+                {{ profile.role?.name }}
               </p>
             </div>
 

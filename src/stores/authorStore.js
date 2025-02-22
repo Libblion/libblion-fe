@@ -5,10 +5,15 @@ import { useAuthStore } from '@/stores/auth';
 
 export const useAuthorStore = defineStore('author', {
   state: () => ({
-    authors: null,
+    authors: [], // Pastikan ini array kosong saat awal
     isLoading: false,
     error: null,
   }),
+
+  getters: {
+    getAllAuthors: (state) => state.authors, // Pastikan ini hanya array
+  },
+
   actions: {
     async fetchAuthors() {
       this.isLoading = true;
@@ -20,7 +25,9 @@ export const useAuthorStore = defineStore('author', {
             Authorization: `Bearer ${authStore.token}`,
           },
         });
-        this.authors = response.data;
+
+        // Perbaikan: Ambil array dari `response.data.data`
+        this.authors = response.data.data;
       } catch (error) {
         this.error =
           error.response?.data?.message ||
@@ -43,20 +50,9 @@ export const useAuthorStore = defineStore('author', {
           },
         });
 
-        // Handle the response data properly
         if (response.data) {
-          // If authors is null or not an array, initialize it
-          if (!Array.isArray(this.authors?.data)) {
-            this.authors = { data: [] };
-          }
-
-          // Add the new author to the data array
-          this.authors.data.push(response.data);
-
-          // Get success message from response or use default
-          const message =
-            response.data?.message || 'Author added successfully!';
-          toast.success(message);
+          this.authors.push(response.data.data); // Perbaikan: Ambil dari `data.data`
+          toast.success(response.data?.message || 'Author added successfully!');
         }
       } catch (error) {
         this.error =
@@ -80,22 +76,12 @@ export const useAuthorStore = defineStore('author', {
           },
         });
 
-        // Ensure authors.data is an array before updating
-        if (Array.isArray(this.authors?.data)) {
-          const index = this.authors.data.findIndex(
-            (author) => author.id === id
-          );
-          if (index !== -1) {
-            this.authors.data[index] = response.data;
-          }
-        } else {
-          console.error('this.authors.data is not an array', this.authors);
-          this.authors = { data: [response.data] }; // Fallback if null
+        const index = this.authors.findIndex((author) => author.id === id);
+        if (index !== -1) {
+          this.authors[index] = response.data.data; // Perbaikan: Ambil dari `data.data`
         }
 
-        const message =
-          response.data?.message || 'Author updated successfully!';
-        toast.success(message);
+        toast.success(response.data?.message || 'Author updated successfully!');
       } catch (error) {
         this.error =
           error.response?.data?.message ||
@@ -112,23 +98,14 @@ export const useAuthorStore = defineStore('author', {
       this.error = null;
       const authStore = useAuthStore();
       try {
-        const response = await api.delete(`/authors/${id}`, {
+        await api.delete(`/authors/${id}`, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
           },
         });
 
-        // Ensure authors.data is an array before filtering
-        if (Array.isArray(this.authors?.data)) {
-          this.authors.data = this.authors.data.filter(
-            (author) => author.id !== id
-          );
-
-          // Get success message from response or use default
-          const message =
-            response.data?.message || 'Author deleted successfully!';
-          toast.success(message);
-        }
+        this.authors = this.authors.filter((author) => author.id !== id);
+        toast.success('Author deleted successfully!');
       } catch (error) {
         this.error =
           error.response?.data?.message ||

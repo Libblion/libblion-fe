@@ -1,74 +1,88 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import LoginView from "@/views/auth/LoginView.vue";
-import DashboardView from "@/views/admin/DashboardView.vue";
-import AdminLayout from "@/layouts/AdminLayout.vue";
-import RegisterView from "@/views/auth/RegisterView.vue";
-import VerifyAccount from "@/views/auth/VerifyAccount.vue";
-import MainLayoutView from "@/views/user/MainLayoutView.vue";
-import DashboardBorrowingView from "@/views/admin/DashboardBorrowingView.vue";
-import DashboardCategory from "@/views/admin/DashboardCategory.vue";
-import ProfileView from "@/views/user/ProfileView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginView from '@/views/auth/LoginView.vue';
+import DashboardView from '@/views/admin/DashboardView.vue';
+import AdminLayout from '@/layouts/AdminLayout.vue';
+import RegisterView from '@/views/auth/RegisterView.vue';
+import VerifyAccount from '@/views/auth/VerifyAccount.vue';
+import MainLayoutView from '@/views/user/MainLayoutView.vue';
+import DashboardBorrowingView from '@/views/admin/DashboardBorrowingView.vue';
+import DashboardCategory from '@/views/admin/DashboardCategory.vue';
+import ProfileView from '@/views/user/ProfileView.vue';
+import DashboardAuthorView from '@/views/admin/DashboardAuthorView.vue';
+import DashboardBookView from '@/views/admin/DashboardBookView.vue';
 
-import { useLoadingStore } from "@/stores/loadingStore";
+import { useLoadingStore } from '@/stores/loadingStore';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
+      path: '/',
+      name: 'home',
       component: HomeView,
     },
     {
-      path: "/sign-in",
-      name: "login",
+      path: '/sign-in',
+      name: 'login',
       component: LoginView,
     },
     {
-      path: "/sign-up",
-      name: "register",
+      path: '/sign-up',
+      name: 'register',
       component: RegisterView,
     },
 
     {
-      path: "/verify-account",
-      name: "verify-account",
+      path: '/verify-account',
+      name: 'verify-account',
       component: VerifyAccount,
     },
 
     {
-      path: "/admin",
-      name: "admin",
+      path: '/admin',
+      name: 'admin',
       component: AdminLayout,
-      redirect: { name: "dashboard" },
+      redirect: { name: 'dashboard' },
       children: [
         {
-          path: "dashboard",
-          name: "dashboard",
+          path: 'dashboard',
+          name: 'dashboard',
           component: DashboardView,
         },
 
         {
-          path: "borrowing-list",
-          name: "borrowing-list",
+          path: 'borrowing-list',
+          name: 'borrowing-list',
           component: DashboardBorrowingView,
         },
+
         {
-          path: "category",
-          name: "admin-category",
+          path: 'author-list',
+          name: 'author-list',
+          component: DashboardAuthorView,
+        },
+        {
+          path: 'book-list',
+          name: 'book-list',
+          component: DashboardBookView,
+        },
+
+        {
+          path: 'category',
+          name: 'admin-category',
           component: DashboardCategory,
         },
       ],
     },
     {
-      path: "/books",
-      name: "books",
+      path: '/books',
+      name: 'books',
       component: MainLayoutView,
     },
     {
-      path: "/profile",
-      name: "profile",
+      path: '/profile',
+      name: 'profile',
       component: ProfileView,
     },
   ],
@@ -76,7 +90,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const loadingStore = useLoadingStore();
-  const excludeRoutes = ["home", "login", "register", "verify-account"];
+  const excludeRoutes = ['home', 'login', 'register', 'verify-account'];
   if (!excludeRoutes.includes(to.name)) {
     loadingStore.start();
   }

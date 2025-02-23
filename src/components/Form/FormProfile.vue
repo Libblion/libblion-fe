@@ -1,5 +1,5 @@
 <template>
-  <form class="flex-1" @submit.prevent="onSubmit">
+  <form class="flex-grow" @submit.prevent="onSubmit">
     <div class="grid grid-cols-2 gap-2">
       <div class="block mb-2">
         <label class="mb-4">Firstname</label>

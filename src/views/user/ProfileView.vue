@@ -10,7 +10,8 @@
               <figure class="w-36 mb-4">
                 <img
                   :src="
-                    profile.profile?.image || 'https://via.placeholder.com/150'
+                    profile.profile?.image ||
+                    'https://ui-avatars.com/api/?name=Default&background=random'
                   "
                   alt="test"
                   class="w-full h-full object-cover rounded-lg"
@@ -28,7 +29,9 @@
                 <h1 class="text-3xl font-bold">
                   Welcome,
                   <span class="font-extrabold">
-                    {{ profile.profile?.firstname ?? "undefined" }}
+                    {{
+                      profile.profile?.firstname ?? "Full name has not been set"
+                    }}
                     {{ profile.profile?.lastname ?? "" }}</span
                   >
                 </h1>
@@ -37,14 +40,20 @@
                   <div class="mb-3">
                     <p>
                       Age:
-                      <span> {{ profile.profile?.age ?? "undefined" }}</span>
+                      <span>
+                        {{
+                          profile.profile?.age ?? "Age has not been set"
+                        }}</span
+                      >
                     </p>
                   </div>
                   <div class="mb-3">
                     <p>
                       Address:
                       <span>
-                        {{ profile.profile?.address ?? "undefined" }}</span
+                        {{
+                          profile.profile?.address ?? "Address has not been set"
+                        }}</span
                       >
                     </p>
                   </div>
@@ -52,7 +61,10 @@
                     <p>
                       Phone Number:
                       <span>
-                        {{ profile.profile?.phone_number ?? "undefined" }}</span
+                        {{
+                          profile.profile?.phone_number ??
+                          "Phone has not been set"
+                        }}</span
                       >
                     </p>
                   </div>
@@ -82,7 +94,7 @@
               />
             </div>
           </div>
-          <div class="shadow-md w-full p-2">
+          <div class="shadow-md w-full flex flex-col p-2">
             <h1 class="font-bold text-xl text-center font-libre-text py-4">
               Edit Your Profile
             </h1>
@@ -197,4 +209,3 @@ onMounted(async () => {
   --easy-table-body-row-hover-background-color: rgba(255, 255, 255, 0.431);
 }
 </style>
-

@@ -22,7 +22,7 @@
             @click="openModal(props.id)"
             class="text-green-400 rounded-xl px-2 shadow cursor-pointer"
           >
-           
+            <font-awesome-icon icon="fa-solid fa-check" />
           </button>
         </template>
       </EasyDataTable>
@@ -100,7 +100,7 @@ const headers = [
 const items = ref([]);
 const isOpenModal = ref(false);
 const selectedBorrowingId = ref(null);
-const loading = useLoadingStore()
+const loading = useLoadingStore();
 
 const stores = useAuthStore();
 
@@ -119,8 +119,8 @@ const handleGetBorrowing = async () => {
     items.value = data.data;
   } catch (error) {
     console.log(error);
-  }finally{
-    loading.stop()
+  } finally {
+    loading.stop();
   }
 };
 

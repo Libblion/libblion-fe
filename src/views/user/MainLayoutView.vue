@@ -6,7 +6,11 @@
             <h1 class="pl-4 text-3xl font-bold p-10">Most Borrowed Books</h1>
             <section
                 class="grid grid-cols-2  items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
-                <div v-for="(borrowed, i) in recommend.most_borrowed_books"
+                <div v-if="errors" class="w-full text-center border col-span-2">
+                    {{ errors
+                     }}
+                </div>
+                <div v-else v-for="(borrowed, i) in recommend.most_borrowed_books"
                     class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full  dark:!bg-red-900">
                     <figure class="overflow-hidden md:w-full sm:w-full">
                         <img :src="i % 2 == 0 ? cover6 : cover5" alt="cover-image">
@@ -73,7 +77,11 @@
             <!-- Recomendation Books -->
             <h1 class="pl-4 text-3xl font-bold p-10">Recomendation Books</h1>
             <section class="grid max-md:grid-rows-3 gap-y-2 p-2 lg:grid-cols-3 gap-x-3 mb-10">
-                <div v-for="(recommend, i) in recommend.recommended_books"
+                <div v-if="errors" class="w-full text-center border">
+                    {{ errors
+                     }}
+                </div>
+                <div v-else v-for="(recommend, i) in recommend.recommended_books"
                     class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit dark:!bg-red-900">
                     <figure class="w-1/2">
                         <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
@@ -139,6 +147,9 @@
                         <font-awesome-icon icon="fa-solid fa-spinner" />
                     </span>
                 </div>
+                <div v-else-if="books.length == 0">
+                    {{ errors }}
+                </div>
                 <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md bg-white/30" v-else>
                     <figure class="w-36 lg:w-64">
                         <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
@@ -192,6 +203,8 @@ const books = computed(() => {
     return storeBooks.getAllBooks
 })
 
+const errors = ref('')
+
 const recommend = ref([])
 
 const recommendationBooks = async () => {
@@ -201,7 +214,7 @@ const recommendationBooks = async () => {
         recommend.value = response.data
     } catch (error) {
         console.log(error);
-        throw error
+        errors.value = error.response.data.message
     }
 }
 

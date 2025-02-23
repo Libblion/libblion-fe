@@ -9,11 +9,14 @@
       </RouterLink>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div v-if="isLoading" class="text-center animate-spin">
         <span class="text-4xl animate-spin">
           <font-awesome-icon icon="fa-solid fa-spinner" />
         </span>
+      </div>
+      <div v-else-if="errors" class="border w-full text-center col-span-2">
+        {{ errors }}
       </div>
       <CardMostBorrowed v-for="(book, index) in books" :key="index" :image="cover12" :bookName="book.title" :author="{
         first_name: book.author.first_name,
@@ -29,6 +32,7 @@ import cover12 from '@/assets/images/cover/cover12.png'
 import { bookStore } from "@/stores/bookStore";
 const storeBook = bookStore()
 const isLoading = ref(false)
+const errors = ref('')
 
 const books = ref([]);
 const getRecommendBooks = async () => {
@@ -37,8 +41,8 @@ const getRecommendBooks = async () => {
     const response = await storeBook.getRecommendedBooks(4, 4)
     books.value = response.data.most_borrowed_books
   } catch (error) {
+    errors.value = error.response.data.message
     console.log(error);
-
   } finally {
     isLoading.value = false
   }

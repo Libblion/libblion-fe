@@ -17,7 +17,10 @@
                 </RouterLink>
             </div>
         </div>
-        <div class="col-span-6 md:col-span-4 flex flex-col md:flex-row justify-center items-center gap-6">
+       <div v-if="errors" class="border text-center col-span-4">
+            {{ errors}}
+       </div>
+       <div class="col-span-6 md:col-span-4 flex flex-col md:flex-row justify-center items-center gap-6" v-else>
             <span class="text-4xl animate-spin" v-if="isLoading">
                 <font-awesome-icon icon="fa-solid fa-spinner" />
             </span>
@@ -43,6 +46,7 @@ import { onMounted, ref } from "vue";
 import { bookStore } from "@/stores/bookStore";
 const storeBook = bookStore()
 const isLoading = ref(false)
+const errors = ref('')
 
 const books = ref([]);
 const getRecommendBooks = async () => {
@@ -51,7 +55,8 @@ const getRecommendBooks = async () => {
         const response = await storeBook.getRecommendedBooks(0, 3)
         books.value = response.data.most_borrowed_books
     } catch (error) {
-        console.log(error);
+        console.log(error.response.data);
+        errors.value = error.response.data.message
 
     } finally {
         isLoading.value = false

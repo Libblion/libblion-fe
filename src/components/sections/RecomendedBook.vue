@@ -12,7 +12,10 @@
             <span class="text-4xl animate-spin" v-if="isLoading">
                 <font-awesome-icon icon="fa-solid fa-spinner"/>
             </span>
-            <div v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px] dark:text-white">
+            <div v-if="errors" class="border w-full text-center">
+                {{ errors }}
+            </div>
+            <div v-else v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px] dark:text-white">
                 <figure class="max-w-64 max-sm:w-[92px]">
                     <img :src="cover11" alt="cover-img">
                 </figure>
@@ -45,6 +48,7 @@ const detailBooks = store.detailBooks
 
 const books = ref([])
 const isLoading = ref(false)
+const errors = ref('')
 
 
 const getRecommendBooks = async ()=>{
@@ -55,6 +59,7 @@ const getRecommendBooks = async ()=>{
         books.value = response.data.recommended_books
     } catch (error) {
         console.log(error);
+        errors.value = error.response.data.message
         
     }finally{
         isLoading.value = false

@@ -1,7 +1,7 @@
 <template>
     <section class="min-h-80 flex flex-col gap-y-10 font-libre-text md:px-10">
-        <div class="flex flex-row justify-between px-1">
-            <h1 class="text-2xl font-bold max-sm:text-lg">Recomended Books</h1>
+        <div class="flex flex-row justify-between px-1 dark:bg-gray-950 dark:text-white">
+            <h1 class="text-2xl font-bold max-sm:text-lg  dark:!bg-red-900 dark:text-white p-1">Recomended Books</h1>
             <RouterLink to="/books">
                 <p class="hover:underline max-sm:text-md">
                     See all <font-awesome-icon icon="fa-solid fa-arrow-right" />
@@ -10,9 +10,9 @@
         </div>
         <div class="flex flex-row justify-evenly max-sm:justify-center gap-1">
             <span class="text-4xl animate-spin" v-if="isLoading">
-                <font-awesome-icon icon="fa-solid fa-spinner" />
+                <font-awesome-icon icon="fa-solid fa-spinner"/>
             </span>
-            <div v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px]">
+            <div v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px] dark:text-white">
                 <figure class="max-w-64 max-sm:w-[92px]">
                     <img :src="cover11" alt="cover-img">
                 </figure>
@@ -21,7 +21,7 @@
                 <div class="flex flex-row  text-stone-400 text-sm gap-x-1 max-sm:text-[10px]">
                     <font-awesome-icon v-for="rate in book.rate" icon="fa-solid fa-star" />
                 </div>
-                <button class="bg-night-purple text-white h-14 w-40 rounded-md max-sm:h-6 max-sm:w-18 max-sm:text-xs cursor-pointer" @click="detailBooks(book)">
+                <button class="bg-night-purple text-white h-14 w-40 rounded-md max-sm:h-6 max-sm:w-18 max-sm:text-xs cursor-pointer  dark:!bg-red-900" @click="detailBooks(book)">
                     Borrow
                 </button>
             </div>

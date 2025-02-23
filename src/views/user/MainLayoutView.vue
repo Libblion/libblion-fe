@@ -5,9 +5,9 @@
             <!-- Rekomendation Most Borrowed Books -->
             <h1 class="pl-4 text-3xl font-bold p-10">Most Borrowed Books</h1>
             <section
-                class="grid grid-cols-2 grid-flow- items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
+                class="grid grid-cols-2  items-center place-items-center sm:place-items-baseline md:place-items-center sm:p-2 sm:gap-x-2 mb-10 mt-10">
                 <div v-for="(borrowed, i) in recommend.most_borrowed_books"
-                    class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full">
+                    class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full  dark:!bg-red-900">
                     <figure class="overflow-hidden md:w-full sm:w-full">
                         <img :src="i % 2 == 0 ? cover6 : cover5" alt="cover-image">
                     </figure>
@@ -74,7 +74,7 @@
             <h1 class="pl-4 text-3xl font-bold p-10">Recomendation Books</h1>
             <section class="grid max-md:grid-rows-3 gap-y-2 p-2 lg:grid-cols-3 gap-x-3 mb-10">
                 <div v-for="(recommend, i) in recommend.recommended_books"
-                    class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit">
+                    class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit dark:!bg-red-900">
                     <figure class="w-1/2">
                         <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
                     </figure>
@@ -106,14 +106,14 @@
             <!-- Categories -->
             <section class="flex flex-wrap justify-center gap-4 lg:justify-around mb-10">
                 <div
-                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer"
+                    class="w-14 h-14 rounded-full flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer  dark:!bg-red-900"
                     @click="categoryBooks(null)">
                     <small>
                         All
                     </small>
                 </div>
                 <div v-for="category in getCategories"
-                    class="w-14 h-14 rounded-full border flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer"
+                    class="w-14 h-14 rounded-full flex justify-center items-center text-[10px] lg:h-20 lg:w-20 lg:text-lg bg-night-purple text-white cursor-pointer  dark:!bg-red-900"
                     @click="categoryBooks(category.id)">
                     <small>
                         {{ category.name }}

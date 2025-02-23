@@ -1,7 +1,8 @@
 <template>
    <section class="md:p-10 px-10 max-sm:p-1 flex items-center flex-col justify-center font-libre-text gap-y-10">
       <div class="flex flex-row justify-between px-1 items-center w-full">
-            <h1 class="text-2xl font-bold max-sm:text-sm">Borrowed Monthly Books Offer</h1>
+            <h1 class="text-2xl font-bold max-sm:text-sm dark:!bg-red-900 dark:text-white p-1">Borrowed Monthly Books Offer</h1>
+
             <RouterLink to="/books">
                 <p class="hover:underline max-sm:text-sm">
                     See all <font-awesome-icon icon="fa-solid fa-arrow-right" />

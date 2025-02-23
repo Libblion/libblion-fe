@@ -1,8 +1,8 @@
 <template>
     <section
-        class="w-full min-h-[85vh] grid grid-cols-6 items-center md:px-16 px-6 font-libre-text gap-6 pt-16 pb-16 md:pt-0 md:pb-0">
+        class="w-full min-h-[85vh] grid grid-cols-6 items-center md:px-16 px-6 font-libre-text gap-6 pt-16 pb-16 md:pt-0 md:pb-0 bg-white dark:bg-gray-950 dark:text-white">
         <div class="col-span-6 md:col-span-2 space-y-6">
-            <h2 class="text-5xl md:text-6xl font-bold text-center md:text-left">
+            <h2 class="text-5xl md:text-6xl font-bold text-center md:text-left dark:text-red-900">
                 Find Your Next Book
             </h2>
             <p class="text-gray-600 text-lg text-center md:text-left">
@@ -11,7 +11,7 @@
             </p>
             <div class="flex justify-center md:justify-start">
                 <RouterLink to="/books">
-                    <button class="bg-black cursor-pointer text-white px-6 py-3 text-lg rounded">
+                    <button class="bg-black cursor-pointer text-white px-6 py-3 text-lg rounded  dark:!bg-red-900">
                         Explore Now
                     </button>
                 </RouterLink>
@@ -24,7 +24,7 @@
             <div class="relative w-40 h-72 md:w-48 md:h-80  overflow-hidden" v-for="(book, i) in books"
                 :class="i % 2 !== 0 ? 'rounded-b-full' : 'rounded-t-full'" v-else>
                 <img :src="i % 2 !== 0 ? cover2 : cover3" alt="Darkness" class="w-full h-full object-cover" />
-                <div class="absolute w-full bg-white text-center py-3" :class="i % 2 !== 0 ? 'top-0' : 'bottom-0'">
+                <div class="absolute w-full bg-white dark:bg-gray-950 text-center py-3" :class="i % 2 !== 0 ? 'top-0' : 'bottom-0'">
                     <p class="font-bold text-lg">
                         {{ book.title.length > 5 ? `${book.title.slice(0, 5)}...` : book.title }}</p>
                     <p class="text-sm">{{ `${book.author.first_name} ${book.author.last_name}` }}</p>

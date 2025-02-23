@@ -11,7 +11,7 @@
 
     <!-- Detail -->
     <div class="w-full sm:w-3/4 p-4 text-center sm:text-left">
-      <h3 class="text-xl font-semibold md:mb-2">{{ bookName }}</h3>
+      <h3 class="text-xl font-semibold md:mb-2  dark:text-black">{{ bookName }}</h3>
       <p class="text-sm text-gray-700">By: {{ `${author.first_name} ${author.last_name}` }}</p>
 
       <!-- Rating -->

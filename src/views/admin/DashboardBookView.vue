@@ -163,7 +163,7 @@
                   :key="author.id"
                   :value="author.id"
                 >
-                  {{ author.name }}
+                  {{ `${author.first_name} ${author.last_name}` }}
                 </option>
               </select>
               <input
@@ -426,8 +426,7 @@
       items.value = formatBooksData(bookStore.getAllBooks);
       await authorStore.fetchAuthors();
       authors.value = authorStore.getAllAuthors;
-      await categoryStore.getCategories();
-      categories.value = categoryStore.getAllCategories;
+       categories.value = await categoryStore.getCategories();;
     } catch (error) {
       console.error('Error fetching books, authors, or categories:', error);
     } finally {

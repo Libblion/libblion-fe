@@ -3,11 +3,11 @@
     <template #content>
       <div class="p-6">
         <div v-if="bookDetail" class="bg-white shadow-lg rounded-lg p-4 dark:!bg-red-900">
-          <div class="flex">
+          <div class="flex flex-col md:flex-row">
             <img
               :src="bookDetail.cover_image"
               alt="Book Cover"
-              class="w-40 rounded-lg shadow-md"
+              class="w-100 md:w-40 rounded-lg shadow-md"
             />
             <div class="ml-4 flex-1">
               <h2 class="text-2xl font-bold">{{ bookDetail.title }}</h2>

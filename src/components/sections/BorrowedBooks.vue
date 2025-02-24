@@ -28,7 +28,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import CardMostBorrowed from "@/components/sections/CardMostBorrowed.vue";
-import cover12 from '@/assets/images/cover/cover12.png'
+import cover12 from '@/assets/images/cover/Cover12.png'
 import { bookStore } from "@/stores/bookStore";
 const storeBook = bookStore()
 const isLoading = ref(false)

@@ -34,8 +34,8 @@
 </template>
 
 <script setup>
-import cover1 from '@/assets/images/cover/cover8.png'
-import cover2 from '@/assets/images/cover/cover10.png'
+import cover1 from '@/assets/images/cover/Cover8.png'
+import cover2 from '@/assets/images/cover/Cover10.png'
 import { onMounted, ref } from 'vue';
 import { api } from '@/services/api';
 import { useAuthStore } from '@/stores/auth';

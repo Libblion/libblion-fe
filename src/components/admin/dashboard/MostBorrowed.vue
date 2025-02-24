@@ -21,8 +21,8 @@
 </template>
 
 <script setup>
-import cover1 from '@/assets/images/cover/cover8.png'
-import cover2 from '@/assets/images/cover/cover10.png'
+import cover1 from '@/assets/images/cover/Cover8.png'
+import cover2 from '@/assets/images/cover/Cover10.png'
 import { bookStore } from '@/stores/bookStore';
 import { onMounted,ref } from 'vue';
 

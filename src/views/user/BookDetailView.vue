@@ -2,83 +2,81 @@
   <MainLayout>
     <template #content>
       <div class="p-6">
-        <div class="bg-white shadow-lg rounded-lg p-4">
-          <div class="flex">
+        <div v-if="bookDetail" class="bg-white shadow-lg rounded-lg p-4 dark:!bg-red-900">
+          <div class="flex flex-col md:flex-row">
             <img
-              :src="book.image"
+              :src="bookDetail.cover_image"
               alt="Book Cover"
-              class="w-40  rounded-lg shadow-md"
+              class="w-100 md:w-40 rounded-lg shadow-md"
             />
             <div class="ml-4 flex-1">
-              <h2 class="text-2xl font-bold">{{ book.title }}</h2>
-              <p class="text-gray-600">By: {{ book.author }}</p>
+              <h2 class="text-2xl font-bold">{{ bookDetail.title }}</h2>
+              <p class="text-gray-600 dark:text-gray-100">
+                By: {{ bookDetail.author?.first_name }}
+                {{ bookDetail.author?.last_name }}
+              </p>
               <div class="flex items-center text-yellow-500 mt-2">
-                <span class="text-lg">⭐ {{ book.rating }}</span>
-                <span class="text-gray-500 ml-2"
-                  >| {{ book.reviews }} Reviews |
-                  {{ book.borrowed }} Borrowed</span
-                >
+                <span class="text-lg">⭐ {{ averageRating }}</span>
+                <span class="text-gray-500 ml-2 dark:text-gray-100">
+                  | {{ bookDetail.reviews?.length || 0 }} Reviews |
+                  {{ bookDetail.borrowings?.length || 0 }} Borrowed
+                </span>
               </div>
-              <p class="text-gray-500 mt-2">
-                <strong>Category:</strong> {{ book.category }}
+              <p class="text-gray-500 mt-2 dark:text-gray-100">
+                <strong>Category:</strong> {{ bookDetail.category?.name }}
               </p>
-              <p class="text-gray-500">
-                <strong>Release:</strong> {{ book.release }}
+              <p class="text-gray-500 dark:text-gray-100">
+                <strong>Release:</strong> {{ bookDetail.release_year }}
               </p>
-              <p class="text-gray-700 mt-2">{{ book.description }}</p>
+              <p class="text-gray-700 mt-2 dark:text-gray-100">{{ bookDetail.description }}</p>
               <button class="mt-4 bg-black text-white px-4 py-2 rounded-lg">
                 Borrow
               </button>
             </div>
           </div>
         </div>
-        <div class="mt-6">
+        <div v-else class="text-center text-gray-500">
+          Loading book details...
+        </div>
+
+        <div v-if="bookDetail?.reviews?.length" class="mt-6">
           <h3 class="text-xl font-semibold">Reviews</h3>
           <div
-            v-for="review in reviews"
+            v-for="review in bookDetail.reviews"
             :key="review.id"
-            class="bg-gray-100 p-4 rounded-lg mt-4"
+            class="bg-gray-100 p-4 rounded-lg mt-4 dark:!bg-red-900 "
           >
-            <div class="flex items-center">
-              <span class="bg-gray-300 w-10 h-10 rounded-full"></span>
-              <p class="ml-3 font-semibold">
-                {{ review.name }} | ⭐ {{ review.rating }}
-              </p>
-            </div>
-            <p class="text-gray-600 mt-2">{{ review.comment }}</p>
+            <p class="font-semibold">⭐ {{ review.rating }}</p>
+            <p class="text-gray-600 dark:text-white mt-2">{{ review.comment }}</p>
           </div>
         </div>
       </div>
     </template>
   </MainLayout>
 </template>
+
 <script setup>
-import { bookStore } from "@/stores/bookStore";
+import { useBookCrudStore } from "@/stores/bookCrudStore";
 import MainLayout from "@/layouts/MainLayout.vue";
-const storeBooks = bookStore();
+import { onMounted, ref, computed } from "vue";
+import { useRoute } from "vue-router";
 
-import { reactive } from "vue";
+const route = useRoute();
 
-// Ini Dummy mang
-const book = reactive({
-  image:
-    "https://upload.wikimedia.org/wikipedia/id/8/8e/Laskar_pelangi_sampul.jpg", // Ganti dengan URL gambar asli
-  title: "The Perks of Being a Wallflower",
-  author: "Stephen Chbosky",
-  rating: 5.0,
-  reviews: 213,
-  borrowed: 37,
-  category: "Fiction",
-  release: "2020",
-  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+const storeBooks = useBookCrudStore();
+const bookDetail = ref(null);
+
+// Hitung rata-rata rating
+const averageRating = computed(() => {
+  if (!bookDetail.value || !bookDetail.value.reviews?.length)
+    return "No ratings";
+  const total = bookDetail.value.reviews.reduce((sum, r) => sum + r.rating, 0);
+  return (total / bookDetail.value.reviews.length).toFixed(1);
 });
 
-const reviews = reactive([
-  {
-    id: 1,
-    name: "Anas Nasuha",
-    rating: 5.0,
-    comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-  },
-]);
+onMounted(async () => {
+  const bookId = route.params.id;
+  const res = await storeBooks.getDetailBook(bookId);
+  bookDetail.value = res;
+});
 </script>

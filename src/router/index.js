@@ -85,7 +85,7 @@ const router = createRouter({
       component: MainLayoutView,
     },
     {
-      path: "/books-detail",
+      path: "/books/:id",
       name: "books-detail",
       component: BookDetailView,
       props: true,

@@ -15,6 +15,7 @@ import DashboardBookView from '@/views/admin/DashboardBookView.vue';
 import { useLoadingStore } from '@/stores/loadingStore';
 import NotFoundView from '@/views/NotFoundView.vue';
 import { useAuthStore } from '@/stores/auth';
+import AboutUsView from '@/views/AboutUsView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: AboutUsView,
     },
     {
       path: '/sign-in',

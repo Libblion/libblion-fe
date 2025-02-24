@@ -13,8 +13,7 @@
     <!-- Desktop Menu -->
     <div class="hidden md:flex space-x-6 text-lg font-poppins">
       <RouterLink to="/books">Books</RouterLink>
-      <RouterLink to="#" v-if="!isLogged">Categories</RouterLink>
-      <RouterLink to="#">About Us</RouterLink>
+      <RouterLink to="/about">About Us</RouterLink>
     </div>
 
     <!-- Search and Login Section -->
@@ -53,8 +52,7 @@
       @click.outside="menuOpen = false">
       <div class="flex flex-col items-center space-y-4 py-4 text-lg font-poppins">
         <RouterLink to="/books">Books</RouterLink>
-        <RouterLink to="#" v-if="!isLogged">Categories</RouterLink>
-        <RouterLink to="#">About Us</RouterLink>
+        <RouterLink to="/about">About Us</RouterLink>
       </div>
     </div>
   </nav>

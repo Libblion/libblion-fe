@@ -19,15 +19,7 @@
 
     <!-- Search and Login Section -->
     <div class="flex items-center space-x-6 mt-2 md:mt-0">
-      <div
-        class="relative flex items-center border-b border-black w-64"
-        v-if="!isLogged"
-      >
-        <span class="text-black px-3">
-          <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
-        </span>
-        <input type="text" placeholder="Search book..." class="px-3 py-2 focus:outline-none w-full font-libre-text" />
-      </div>
+      
       <div class="h-10 w-0.5 bg-black hidden md:block" v-if="!isLogged"></div>
 
       <router-link

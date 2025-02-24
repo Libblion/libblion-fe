@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+    .font-poppins {
+        font-family: "Poppins", serif ;
+        font-style: normal;
+    }
+    .font-libre-text {
+        font-family: "Libre Caslon Text", serif;
+        font-style: normal;
+    }
+
+    .bg-night-green {
+        background-color: #0B1220;
+    }
+    .bg-night-purple {
+        background-color: #0B1220;
+    }
+    .bg-yellow-tint{
+        background-color: #FFB22C;
+    }
+
+    .text-yellow-tint{
+        color: #FFB22C;
+    }
+    .text-purple-tint{
+        color: #B771E5;
+    }
+    .text-indigo-tint{
+        color: #7886C7;
+    }
+    .text-pink-tint{
+        color: #E195AB;
+    }
+    .text-blue-tint{
+        color: #578FCA;
+    }
+}

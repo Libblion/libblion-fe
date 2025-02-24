@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex flex-row justify-between items-center py-4 px-8 shadow-md bg-white relative">
+  <nav class="flex flex-row justify-between items-center py-4 px-2 md:px-8 shadow-md bg-white relative">
     <div class="flex items-center w-full md:w-auto">
       <!-- Mobile Menu Button -->
       <button @click="toggleMenu" class="md:hidden text-2xl mr-4">
@@ -11,21 +11,18 @@
     </div>
 
     <!-- Desktop Menu -->
-    <div class="hidden md:flex space-x-6 text-lg font-poppins">
+    <div class="hidden md:flex w-full text-lg font-poppins justify-evenly md:justify-center md:gap-x-20">
       <RouterLink to="/books">Books</RouterLink>
       <RouterLink to="/about">About Us</RouterLink>
     </div>
 
     <!-- Search and Login Section -->
-    <div class="flex items-center space-x-6 mt-2 md:mt-0">
-      
-      <div class="h-10 w-0.5 bg-black hidden md:block" v-if="!isLogged"></div>
-
+    <div class="flex items-center  mt-2 md:mt-0  w-full justify-evenly max-w-52">
       <router-link
         to="/profile"
-        v-if="stores.currentUser"
+        v-if="stores.currentUser" class="p-2"
         :class="[
-          'bg-black text-white font-poppins px-4 py-2 rounded',
+          'bg-black text-white font-poppins rounded',
           stores.currentUser
             ? 'cursor-pointer'
             : 'cursor-not-allowed pointer-events-none',
@@ -42,9 +39,12 @@
         Login
       </router-link>
 
-      <button v-else @click="handleLogout" class="bg-black text-white font-poppins px-4 py-2 rounded cursor-pointer">
+      <button v-else @click="handleLogout" class="bg-black text-white font-poppins p-2 rounded cursor-pointer text-sm">
         Logout
       </button>
+      <RouterLink to="/admin/dashboard" v-if="currentUser?.role_id=== 4" class="bg-red-900 text-white font-poppins p-2 rounded cursor-pointer text-sm">
+        admin
+      </RouterLink>
     </div>
 
     <!-- Mobile Menu -->
@@ -78,7 +78,9 @@ const closeMenu = (event) => {
   }
 };
 
-const { isLogged } = storeToRefs(stores);
+
+const auth = useAuthStore()
+const {currentUser} = storeToRefs(auth)
 
 const categories = useCategoryStore();
 const getCategories = async () => {

@@ -52,7 +52,7 @@ const router = createRouter({
       name: 'admin',
       component: AdminLayout,
       redirect: { name: 'dashboard' },
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: true,isAdmin : true },
       children: [
         {
           path: 'dashboard',
@@ -103,14 +103,19 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore(); 
   const isLogged = auth.isLogged;
+  const userRole = auth?.currentUser?.role_id
+  
 
   if (to.meta.requiresAuth && !isLogged) {
     next({ name: 'login' });
   } else if (isLogged && (to.name === 'login' || to.name === 'register' || to.name === 'verify-account')) {
     next({ name: 'home' });
-  } else {
+  } 
+  else if (to.meta.isAdmin && userRole !== 4) {
+    next({ name: 'home' });
+  }else {
     next();
-  }
+  } 
 });
 router.beforeEach((to, from, next) => {
   const loadingStore = useLoadingStore();

@@ -15,9 +15,9 @@
             <div v-if="errors" class="border w-full text-center">
                 {{ errors }}
             </div>
-            <div v-else v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-[92px] dark:text-white">
-                <figure class="max-w-64 max-sm:w-[92px]">
-                    <img :src="cover11" alt="cover-img">
+            <div v-else v-for="book in books" class="flex flex-col gap-y-2 max-sm:w-36 max-md:w-52 dark:text-white justify-center">
+                <figure class="w-64 max-md:w-full h-72 overflow-hidden">
+                    <img :src="book.cover_image ?? `https://placehold.co/800x1000?text=Cover+Image`" alt="cover-img" class="w-full h-full object-cover">
                 </figure>
                 <h1 class="font-semibold max-sm:text-xs">{{ book.title.length > 10 ? `${book.title.slice(0,10)}...` : book.title }}</h1>
                 <h2 class="text-sm  max-sm:text-xs">By : {{ `${book.author.first_name} ${book.author.last_name}` }}</h2>

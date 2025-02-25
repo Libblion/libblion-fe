@@ -18,7 +18,7 @@
       <div v-else-if="errors" class="border w-full text-center col-span-2">
         {{ errors }}
       </div>
-      <CardMostBorrowed v-for="(book, index) in books" :key="index" :image="cover12" :bookName="book.title" :author="{
+      <CardMostBorrowed v-for="(book, index) in books" :key="index" :image="book.cover_image ?? `https://placehold.co/800x1000?text=Cover+Image`" :bookName="book.title" :author="{
         first_name: book.author.first_name,
         last_name: book.author.last_name
       }" :rating="book.rating" v-else />

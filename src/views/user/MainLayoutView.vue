@@ -11,9 +11,9 @@
                      }}
                 </div>
                 <div v-else v-for="(borrowed, i) in recommend.most_borrowed_books"
-                    class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full  dark:!bg-red-900">
-                    <figure class="overflow-hidden md:w-full sm:w-full">
-                        <img :src="i % 2 == 0 ? cover6 : cover5" alt="cover-image">
+                    class="shadow-md flex flex-col gap-y-2 w-42 h-72 sm:w-full lg:w-[500px] sm:flex-row sm:h-full dark:!bg-red-900">
+                    <figure class="w-96  max-md:w-42 max-md:h-32">
+                        <img :src="borrowed.cover_image ?? `https://placehold.co/500x800?text=Cover+Image`" alt="cover-image" class="w-full h-full object-cover">
                     </figure>
                     <div class="flex flex-col justify-evenly w-full">
                         <div class="pl-2">
@@ -82,9 +82,9 @@
                      }}
                 </div>
                 <div v-else v-for="(recommend, i) in recommend.recommended_books"
-                    class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-fit dark:!bg-red-900">
-                    <figure class="w-1/2">
-                        <img :src="i % 2 == 0 ? cover2 : cover3" alt="image-cover">
+                    class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-52 dark:!bg-red-900">
+                    <figure class="w-64 h-full max-md:h-32 max-md:w-32 overflow-hidden border">
+                        <img :src="recommend.cover_image ?? `https://placehold.co/800x1000?text=Cover+Image`" alt="image-cover" class="h-full w-full object-cover">
                     </figure>
                     <div class="flex flex-col gap-y-2 lg:between lg:gap-y-4 pb-2">
                         <div class="lg:h-full flex justify-center flex-col">
@@ -151,8 +151,8 @@
                     {{ errors }}
                 </div>
                 <div v-for="(book, i) in books" class="flex flex-col gap-y-1 shadow-md bg-white/30" v-else>
-                    <figure class="w-36 lg:w-64">
-                        <img :src="i % 2 == 0 ? cover8 : cover7" alt="image-cover">
+                    <figure class="h-72 w-52 lg:w-64 lg:h-72 overflow-hidden">
+                        <img :src="book.cover_image ?? `https://placehold.co/800x900?text=Cover+Image`" alt="image-cover" class="w-full h-full object-cover">
                     </figure>
                     <h1 class="font-light px-4">
                         {{ book.title.length > 15 ? `${book.title.slice(0, 10)}...` : book.title }}</h1>

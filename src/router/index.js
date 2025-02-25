@@ -11,11 +11,13 @@ import DashboardCategoryView from '@/views/admin/DashboardCategoryView.vue';
 import ProfileView from '@/views/user/ProfileView.vue';
 import DashboardAuthorView from '@/views/admin/DashboardAuthorView.vue';
 import DashboardBookView from '@/views/admin/DashboardBookView.vue';
-
-import { useLoadingStore } from '@/stores/loadingStore';
-import NotFoundView from '@/views/NotFoundView.vue';
-import { useAuthStore } from '@/stores/auth';
 import AboutUsView from '@/views/AboutUsView.vue';
+import BookDetailView from "@/views/user/BookDetailView.vue";
+
+import { useLoadingStore } from "@/stores/loadingStore";
+import NotFoundView from "@/views/NotFoundView.vue";
+import { useAuthStore } from "@/stores/auth";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,18 +87,23 @@ const router = createRouter({
       ],
     },
     {
-      path: '/books',
-      name: 'books',
+      path: "/books",
+      name: "books",
       component: MainLayoutView,
     },
     {
-      path: '/profile',
-      name: 'profile',
+      path: "/books/:id",
+      name: "books-detail",
+      component: BookDetailView,
+      props: true,
+    },
+    {
+      path: "/profile",
+      name: "profile",
       component: ProfileView,
       meta: { requiresAuth: true },
-      
     },
-    { path: '/:pathMatch(.*)*', component: NotFoundView },
+    { path: "/:pathMatch(.*)*", component: NotFoundView },
   ],
 });
 
@@ -125,6 +132,5 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
-
 
 export default router;

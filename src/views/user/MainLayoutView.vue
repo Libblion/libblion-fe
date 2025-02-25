@@ -83,7 +83,7 @@
                 </div>
                 <div v-else v-for="(recommend, i) in recommend.recommended_books"
                     class="h-32 overflow-hidden flex flex-row gap-4 shadow-md lg:h-52 dark:!bg-red-900">
-                    <figure class="w-64 h-full max-md:h-32 max-md:w-32 overflow-hidden border">
+                    <figure class="w-64 h-full max-md:h-32 max-md:w-32 overflow-hidden">
                         <img :src="recommend.cover_image ?? `https://placehold.co/800x1000?text=Cover+Image`" alt="image-cover" class="h-full w-full object-cover">
                     </figure>
                     <div class="flex flex-col gap-y-2 lg:between lg:gap-y-4 pb-2">

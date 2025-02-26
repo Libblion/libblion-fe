@@ -167,9 +167,10 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, watch } from 'vue';
+  import { ref, onMounted, watch ,computed} from 'vue';
   import { useAuthorStore } from '@/stores/authorStore';
   import { useLoadingStore } from '@/stores/loadingStore';
+import { storeToRefs } from 'pinia';
 
   const authorStore = useAuthorStore();
   const loadingStore = useLoadingStore();
@@ -205,29 +206,7 @@
       no_telp: '',
     };
   };
-
-  const formatAuthorsData = (authors) => {
-    if (authors && Array.isArray(authors.data)) {
-      return authors.data.map((author, index) => ({
-        index: index + 1,
-        id: author.id,
-        first_name: author.first_name,
-        last_name: author.last_name,
-        email: author.email,
-        no_telp: author.no_telp,
-      }));
-    }
-    return [];
-  };
-
-  watch(
-    () => authorStore.authors,
-    (newAuthors) => {
-      items.value = formatAuthorsData(newAuthors);
-    },
-    { deep: true }
-  );
-
+  
   const handleAdd = () => {
     isEditing.value = false;
     resetForm();
@@ -265,7 +244,7 @@
       loadingStore.stop();
     }
   };
-
+  
   const confirmDelete = async () => {
     loadingStore.start();
     try {
@@ -280,11 +259,27 @@
     }
   };
 
+  const {authors} = storeToRefs(authorStore)
+
+  const formattedAuthors = computed(() => {
+  if (authors.value && Array.isArray(authors.value)) {
+    return authors.value.map((author, index) => ({
+      index: index + 1,
+      id: author.id,
+      first_name: author.first_name,
+      last_name: author.last_name,
+      email: author.email,
+      no_telp: author.no_telp,
+    }));
+  }
+  return [];
+});
+
   onMounted(async () => {
     loadingStore.start();
     try {
       await authorStore.fetchAuthors();
-      items.value = formatAuthorsData(authorStore.authors);
+      items.value = formattedAuthors.value;      
     } catch (error) {
       console.error('Error fetching authors:', error);
     } finally {

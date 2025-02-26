@@ -24,8 +24,7 @@ export const useAuthorStore = defineStore('author', {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
           },
-        });
-
+        });      
         // Perbaikan: Ambil array dari `response.data.data`
         this.authors = response.data.data;
       } catch (error) {

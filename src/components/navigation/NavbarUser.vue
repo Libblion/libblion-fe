@@ -42,7 +42,7 @@
       <button v-else @click="handleLogout" class="bg-black text-white font-poppins p-2 rounded cursor-pointer text-sm">
         Logout
       </button>
-      <RouterLink to="/admin/dashboard" v-if="currentUser?.role_id=== 4" class="bg-red-900 text-white font-poppins p-2 rounded cursor-pointer text-sm">
+      <RouterLink to="/admin/dashboard" v-if="currentUser?.role_id === 3" class="bg-red-900 text-white font-poppins p-2 rounded cursor-pointer text-sm">
         admin
       </RouterLink>
     </div>
@@ -60,7 +60,6 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth";
-import { useCategoryStore } from "@/stores/categoryStore";
 import { storeToRefs } from "pinia";
 import { ref, onMounted, onUnmounted} from "vue";
 const menuOpen = ref(false);
@@ -82,15 +81,7 @@ const closeMenu = (event) => {
 const auth = useAuthStore()
 const {currentUser} = storeToRefs(auth)
 
-const categories = useCategoryStore();
-const getCategories = async () => {
-  try {
-    const response = await categories.getCategories();
-  } catch (error) {}
-};
-
 onMounted(() => {
-  getCategories();
   document.addEventListener("click", closeMenu);
 });
 

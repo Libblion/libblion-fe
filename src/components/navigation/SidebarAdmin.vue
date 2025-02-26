@@ -8,7 +8,7 @@
           <img :src="profileImg" alt="profile-image" />
         </figure>
         <p class="text-black">
-          {{ 'Anas Nasuha'.length > 11 ? 'Anas Nasuha...' : 'Anas Nasuha' }}
+          {{ user.currentUser.username.length > 11 ? `${user.currentUser.username}...` : user.currentUser.username }}
         </p>
         <button
           class="text-black w-12 h-full rounded-full cursor-pointer hover:bg-slate-50 -rotate-45"
@@ -40,7 +40,8 @@
 
 <script setup>
   import profileImg from '@/assets/images/profile/laravel.jpg';
-
+import { useAuthStore } from '@/stores/auth';
+  const user = useAuthStore()
   const menus = [
     {
       name: 'Dashboard',

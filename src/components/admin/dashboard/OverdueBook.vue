@@ -4,7 +4,23 @@
             Overdue Books Loan
         </h1>
         <div>
-            <EasyDataTable :headers="headers" :items="items" :rows-per-page="4" :rows-items="[4]" table-class-name="customize-table"/>
+            <EasyDataTable :headers="headers" :items="items" :rows-per-page="4" :rows-items="[4]"
+                table-class-name="customize-table" :loading="isLoading">
+                <template #item-username="{user}">
+                    {{ user.username }}
+                </template>
+                <template #item-title="{book}">
+                    {{ book.title }}
+                </template>
+                <template #item-author="{book}">
+                    {{ `${book.author.first_name} ${book.author.last_name}` }}
+                </template>
+                <template #item-status="item">
+                    <p class="text-yellow-500">
+                        {{ item.status }}
+                    </p>
+                </template>
+            </EasyDataTable>
         </div>
     </div>
 </template>
@@ -31,7 +47,7 @@ const headers = [
 
     {
         text: 'Overdue',
-        value: 'overdue_date'
+        value: 'status'
     },
     {
         text: 'Return',
@@ -40,31 +56,49 @@ const headers = [
 
 ];
 
-const items = [
-    { username: "Stephen Curry", author: "GSW",  id: 'G', title: "Davidson", overdue_date: "December 12,2025",return_date: "April 12,2025"},
-    { username: "Lebron James", author: "LAL",id: 'F',  title: "St. Vincent-St. Mary HS (OH)", overdue_date: "December 12,2025",return_date: "April 12,2025"},
-    { username: "Kevin Durant", author: "BKN",  id: 'F',  title: "Texas-Austin", overdue_date: "December 12,2025",return_date: "April 12,2025"},
-    { username: "Giannis Antetokounmpo", author: "MIL",id: 'F',  title: "Filathlitikos", overdue_date: "11-02-2023",return_date: "11-02-2023" },
-];
+import { userBorrowStore } from '@/stores/borrowStore';
+import { onMounted, ref } from 'vue';
+const borrow = userBorrowStore()
+
+const items = ref([])
+const isLoading = ref(false)
+const getBorrowingsOverdue = async () => {
+    isLoading.value = true
+    try {
+        const res = await borrow.getBorrowingOverdue()
+        console.log(res);
+        items.value = [...res.data]
+
+    } catch (error) {
+        console.log(error);
+
+    } finally {
+        isLoading.value = false
+    }
+}
+
+onMounted(async () => {
+    await getBorrowingsOverdue()
+})
 
 </script>
 
-<style setup>
-.customize-table{
-    --easy-table-header-background-color : #0B1220;
-    --easy-table-header-font-color : rgba(255, 255, 255, 0.771);
+<style scoped>
+.customize-table {
+    --easy-table-header-background-color: #0B1220;
+    --easy-table-header-font-color: rgba(255, 255, 255, 0.771);
 
 
-    --easy-table-body-row-background-color : #0B1220;
-    --easy-table-body-row-font-color : rgba(255, 255, 255, 0.771);
-    --easy-table-body-row-font-size : 10px;
+    --easy-table-body-row-background-color: #0B1220;
+    --easy-table-body-row-font-color: rgba(255, 255, 255, 0.771);
+    --easy-table-body-row-font-size : 11px;
 
 
-    --easy-table-footer-background-color : #0B1220;
-    --easy-table-footer-font-color:rgba(255, 255, 255, 0.771);
+    --easy-table-footer-background-color: #0B1220;
+    --easy-table-footer-font-color: rgba(255, 255, 255, 0.771);
 
-    --easy-table-border : none;
-    --easy-table-body-row-hover-background-color : rgba(255, 255, 255, 0.431);
+    --easy-table-row-border : 1px solid rgba(255, 255, 255, 0.771);
+    --easy-table-body-row-hover-background-color: rgba(255, 255, 255, 0.431);
 
 }
 </style>

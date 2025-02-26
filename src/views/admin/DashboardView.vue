@@ -46,6 +46,7 @@ import { useAuthStore } from '@/stores/auth';
 const loading = useLoadingStore()
 const auth = useAuthStore()
 const borrowed = ref(0)
+const overdue = ref(0)
 
 const totalBorrowed = async () => {
   const token = auth.token
@@ -63,6 +64,25 @@ const totalBorrowed = async () => {
 
   }
 }
+const totalBorrowedOverdue = async () => {
+  const token = auth.token
+  try {
+    const response = api.get('/borrow/count', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      params : {
+        status : 'overdue'
+      }
+    })
+
+    overdue.value = (await response).data.count
+
+  } catch (error) {
+    console.log(error);
+
+  }
+}
 
 
 const dataInfo = computed(() => ([
@@ -74,7 +94,7 @@ const dataInfo = computed(() => ([
   },
   {
     name: 'Overdue',
-    total: 200,
+    total: overdue.value,
     icon: 'fa-solid fa-user-clock',
     textColor: 'text-indigo-tint'
   },
@@ -96,7 +116,8 @@ const dataInfo = computed(() => ([
 onMounted(async () => {
   try {
     await Promise.all([
-      totalBorrowed()
+      totalBorrowed(),
+      totalBorrowedOverdue()
     ])
   } catch (error) {
     console.log(error);

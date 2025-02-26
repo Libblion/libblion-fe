@@ -118,7 +118,7 @@ router.beforeEach((to, from, next) => {
   } else if (isLogged && (to.name === 'login' || to.name === 'register' || to.name === 'verify-account')) {
     next({ name: 'home' });
   } 
-  else if (to.meta.isAdmin && userRole !== 4) {
+  else if (to.meta.isAdmin && userRole !== 3) {
     next({ name: 'home' });
   }else {
     next();

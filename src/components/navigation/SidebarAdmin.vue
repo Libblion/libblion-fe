@@ -17,7 +17,7 @@
         </button>
       </div>
     </header>
-    <main class="w-full">
+    <main class="w-full flex flex-col justify-between h-full">
       <ul class="w-full flex flex-col gap-y-2 border-l px-2 border-white/30">
         <RouterLink
           v-for="menu in menus"
@@ -31,6 +31,9 @@
           </li>
         </RouterLink>
       </ul>
+      <RouterLink to="/" class="border-b cursor-pointer mb-4 hover:text-white/50 transition-colors duration-200 text-center p-2">
+        <font-awesome-icon icon="fa-solid fa-house"/> <span>Home</span>
+      </RouterLink>
     </main>
   </div>
 </template>

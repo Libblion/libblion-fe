@@ -9,6 +9,7 @@
         :rows-per-page="10"
         :rows-items="[1]"
         show-index
+        table-class-name="customize-table"
       >
         <template #loading>
           <img

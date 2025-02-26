@@ -10,7 +10,7 @@
             </div>
             <div class="flex flex-col gap-2 items-center">
                 <figure class="max-w-60 overflow-hidden">
-                    <img :src="detailBook.cover" alt="image-cover">
+                    <img :src="detailBook.cover_image ?? `https://placehold.co/600x400?text=Cover+Image`" alt="image-cover">
                 </figure>
                 <div class="flex flex-col gap-2 bg-stone-100 p-2 w-60">
                     <h1 class="text-xl font-bold">{{ detailBook.title }}</h1>

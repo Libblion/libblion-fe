@@ -38,20 +38,25 @@
 <script setup>
 import NavbarAdmin from '@/components/navigation/NavbarAdmin.vue';
 import SidebarAdmin from '@/components/navigation/SidebarAdmin.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-const isSidebar = ref(false)
-
-const showClassSidebar = ref(' max-lg:-translate-x-full')
+const isSidebar = ref(false);
+const showClassSidebar = ref('max-lg:-translate-x-full');
+const route = useRoute(); 
 
 const showSidebar = (data) => {
-  isSidebar.value = !data
+  isSidebar.value = !data;
 
   if (isSidebar.value) {
-    showClassSidebar.value = "max-lg:translate-x-0"
+    showClassSidebar.value = "max-lg:translate-x-0";
+  } else {
+    showClassSidebar.value = "max-lg:-translate-x-full";
   }
-  else {
-    showClassSidebar.value = "max-lg:-translate-x-full"
-  }
-}
+};
+
+watch(route, () => {
+  showClassSidebar.value = "max-lg:-translate-x-full";
+  isSidebar.value = false;
+});
 </script>

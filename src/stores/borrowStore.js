@@ -17,15 +17,8 @@ export const userBorrowStore = defineStore("borrows", {
             }
         },
         async createBorrowing(payload) {
-            const dateFormatter = new Intl.DateTimeFormat("fr-CA");
-            const returnDate = dateFormatter.format(
-                new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-            );
             try {
-                const response = await api.post("/borrowings", {
-                    ...payload,
-                    return_date: returnDate,
-                });
+                const response = await api.post("/borrowings", payload);
 
                 return response.data;
             } catch (error) {

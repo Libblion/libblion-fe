@@ -24,7 +24,7 @@
               </p>
             </div>
 
-            <div class="bg-black text-white w-full px-4 py-2">
+            <div class="text-black w-full px-4 py-2">
               <div class="flex flex-col gap-2">
                 <h1 class="text-3xl font-bold">
                   Welcome,
@@ -40,66 +40,100 @@
                   <div class="mb-3">
                     <p>
                       Age:
-                      <span>
-                        {{
-                          profile.profile?.age ?? "Age has not been set"
-                        }}</span
-                      >
+                      <span> {{ profile.profile?.age ?? "" }}</span>
                     </p>
                   </div>
                   <div class="mb-3">
                     <p>
                       Address:
-                      <span>
-                        {{
-                          profile.profile?.address ?? "Address has not been set"
-                        }}</span
-                      >
+                      <span> {{ profile.profile?.address ?? "" }}</span>
                     </p>
                   </div>
                   <div class="mb-3">
                     <p>
                       Phone Number:
-                      <span>
-                        {{
-                          profile.profile?.phone_number ??
-                          "Phone has not been set"
-                        }}</span
-                      >
+                      <span> {{ profile.profile?.phone_number ?? "" }}</span>
                     </p>
                   </div>
                   <div>
                     <p>
                       Email:
-                      <span> {{ profile.email ?? "undefined" }}</span>
+                      <span> {{ profile.email ?? "" }}</span>
                     </p>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="w-full flex flex-col p-2">
+              <h1 class="font-bold text-xl text-center font-libre-text py-4">
+                Edit Your Profile
+              </h1>
+
+              <FormProfile @submit="handleSubmit" />
+            </div>
           </div>
         </div>
 
-        <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
-          <div class="max-w-full flex flex-col h-full shadow-md p-2">
-            <h1 class="font-bold text-xl text-center py-4">
-              List Borrowing User
-            </h1>
+        <div
+          class="max-w-full flex flex-col h-full shadow-md p-2"
+          v-if="profileStore.profile.role_id !== 3"
+        >
+          <h1 class="font-bold text-xl text-center py-4">
+            List Borrowing User
+          </h1>
 
-            <div class="flex-1">
-              <EasyDataTable
-                :headers="headers"
-                :items="tableData"
-                table-class-name="customize-table "
-              />
+          <EasyDataTable
+            :headers="headers"
+            :items="tableData"
+            :rows-per-page="10"
+            theme-color="#1d90ff"
+            table-class-name="customize-table"
+            header-text-direction="center"
+            body-text-direction="center"
+            show-index
+          >
+            <template #item-actions="item">
+              <button
+                @click="openModal(item)"
+                class="text-green-400 rounded-md px-2 py-2 shadow cursor-pointer bg-teal-50"
+              >
+                Return
+              </button>
+            </template>
+          </EasyDataTable>
+        </div>
+
+        <div
+          v-if="isModal"
+          class="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm"
+        >
+          <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-bold mb-2">Konfirmasi Pengembalian</h2>
+            <p><strong>Buku:</strong> {{ dataBook.book_title }}</p>
+            <p>
+              <strong>Tanggal Peminjaman:</strong>
+              {{ dataBook.borrow_date }}
+            </p>
+            <p>
+              <strong>Tanggal Pengembalian:</strong>
+              {{ dataBook.return_date || "Belum dikembalikan" }}
+            </p>
+
+            <div class="mt-4 flex justify-end gap-2">
+              <button
+                @click="isModal = false"
+                class="px-4 py-2 bg-gray-300 rounded"
+              >
+                Batal
+              </button>
+              <button
+                @click="handleReturnBook"
+                class="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Konfirmasi
+              </button>
             </div>
-          </div>
-          <div class="shadow-md w-full flex flex-col p-2">
-            <h1 class="font-bold text-xl text-center font-libre-text py-4">
-              Edit Your Profile
-            </h1>
-
-            <FormProfile @submit="handleSubmit" />
           </div>
         </div>
       </section>
@@ -110,7 +144,7 @@
 <script setup>
 import MainLayout from "@/layouts/MainLayout.vue";
 import { useLoadingStore } from "@/stores/loadingStore";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useProfileStore } from "@/stores/profile";
 import { storeToRefs } from "pinia";
 import FormProfile from "@/components/Form/FormProfile.vue";
@@ -143,7 +177,16 @@ const headers = [
     text: "Overdue",
     value: "status",
   },
+  { text: "Actions", value: "actions" },
 ];
+
+const isModal = ref(false);
+const dataBook = ref({});
+console.log("dataBook", dataBook);
+const openModal = (item) => {
+  dataBook.value = item;
+  isModal.value = true;
+};
 
 const handleSubmit = async (payload) => {
   const formData = new FormData();
@@ -174,6 +217,8 @@ const tableData = computed(() => {
   if (!profile.value || !profile.value.borrowings) return [];
 
   return profile.value.borrowings.map((borrowing) => ({
+    id: borrowing.id,
+    book_id: borrowing.book?.id || null,
     username: profile.value.username,
     status: borrowing.status,
     borrow_date: borrowing.borrow_date || "Belum dipinjam",
@@ -192,20 +237,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<style setup>
-.customize-table {
-  --easy-table-header-background-color: #0b1220;
-  --easy-table-header-font-color: rgba(255, 255, 255, 0.771);
-
-  --easy-table-body-row-background-color: #0b1220;
-  --easy-table-body-row-font-color: rgba(255, 255, 255, 0.771);
-  --easy-table-body-row-font-size: 10px;
-
-  --easy-table-footer-background-color: #0b1220;
-  --easy-table-footer-font-color: rgba(255, 255, 255, 0.771);
-
-  --easy-table-border: none;
-  --easy-table-body-row-hover-background-color: rgba(255, 255, 255, 0.431);
-}
-</style>

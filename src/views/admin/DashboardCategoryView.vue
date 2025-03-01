@@ -92,7 +92,7 @@
             </div>
         </div>
 
-        <ModalCategory ref="modalRef" @refresh="categories.getCategories" />
+        <ModalCategory ref="modalRef" @refresh="refreshCategories" />
     </section>
 </template>
 
@@ -137,33 +137,31 @@ const formattedCategories = computed(() => {
     return formatCategoryData(categories.categories);
 });
 
-const handleSearch = (query, noLoading = false) => {
+const handleSearch = async (query, noLoading = false) => {
     if (!noLoading) {
         loadingStore.start();
     }
 
-    searchTerm.value = query;
-    if (!query) {
-        categories.categories = allCategories.value;
-    } else {
-        const filtered = allCategories.value.filter((category) =>
-            category.name.toLowerCase().includes(query.toLowerCase())
-        );
-        categories.categories = filtered;
-    }
-
-    if (!noLoading) {
-        loadingStore.stop();
+    try {
+        await categories.searchCategories(query, noLoading);
+    } catch (error) {
+        console.error("Error searching categories:", error);
+    } finally {
+        if (!noLoading) {
+            loadingStore.stop();
+        }
     }
 };
 
 const fetchCategories = async () => {
+    loadingStore.start();
     try {
-        const response = await categoryStore.getCategories();
-        allCategories.value = response;
-        formattedCategories.value = formatCategories(response);
+        await categories.getCategories();
+        allCategories.value = [...categories.categories];
     } catch (error) {
         console.error("Error fetching categories:", error);
+    } finally {
+        loadingStore.stop();
     }
 };
 
@@ -179,12 +177,16 @@ const handleDelete = async () => {
         );
         toast.success("Category deleted successfully");
         closeModalDelete();
-        categories.getCategories();
+        await fetchCategories();
     } catch (error) {
         console.error(error);
         toast.error("Failed to delete category");
         closeModalDelete();
     }
+};
+
+const refreshCategories = async () => {
+    await fetchCategories();
 };
 
 const openCreateModal = () => {
@@ -208,7 +210,7 @@ const closeModalDelete = () => {
 provide("openCreateModal", openCreateModal);
 
 onMounted(() => {
-    categories.getCategories();
+    fetchCategories();
 });
 </script>
 

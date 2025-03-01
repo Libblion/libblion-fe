@@ -319,8 +319,8 @@ const handleSearch = async (query, noLoading = false) => {
         loadingStore.start();
     }
     try {
-        await authorStore.searchAuthors(query);
-        items.value = formatAuthorsData(authorStore.getAllAuthors);
+        await authorStore.searchAuthors(query, noLoading);
+        items.value = formattedAuthors.value;
     } catch (error) {
         console.error("Error searching authors:", error);
     } finally {

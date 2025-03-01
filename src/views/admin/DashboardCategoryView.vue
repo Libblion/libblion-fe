@@ -1,14 +1,26 @@
 <template>
     <section class="container mx-auto font-poppins">
-        <div class="bg-[#0b1220] rounded-xl p-6 mt-10">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-white">Category List</h1>
+        <!-- Bagian Pencarian di luar kotak utama -->
+        <div class="flex flex-col mt-10 mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-grow mr-4">
+                    <SearchBar
+                        placeholder="Search category here..."
+                        @search="handleSearch"
+                    />
+                </div>
                 <button
                     @click="openCreateModal"
                     class="bg-yellow-500 hover:bg-yellow-600 text-[#0b1220] px-4 py-2 rounded-lg cursor-pointer transition-colors"
                 >
                     Add Category
                 </button>
+            </div>
+        </div>
+
+        <div class="bg-[#0b1220] rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-white">Category Table</h1>
             </div>
 
             <div class="w-full overflow-x-auto">
@@ -88,9 +100,11 @@
 import { ref, onMounted, provide, computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useCategoryStore } from "@/stores/categoryStore";
+import { useLoadingStore } from "@/stores/loadingStore";
 import { api } from "@/services/api";
 import { toast } from "vue3-toastify";
 import ModalCategory from "../../components/modal/ModalCategory.vue";
+import SearchBar from "@/components/admin/SearchBar.vue";
 
 const headers = [
     { text: "No.", value: "index" },
@@ -100,10 +114,14 @@ const headers = [
 
 const stores = useAuthStore();
 const categories = useCategoryStore();
+const loadingStore = useLoadingStore();
 const modalRef = ref(null);
 
 const isOpenModalDelete = ref(false);
 const selectedCategoryId = ref(null);
+
+const searchTerm = ref("");
+const allCategories = ref([]);
 
 const formatCategoryData = (categoryData) => {
     if (categoryData && Array.isArray(categoryData)) {
@@ -118,6 +136,36 @@ const formatCategoryData = (categoryData) => {
 const formattedCategories = computed(() => {
     return formatCategoryData(categories.categories);
 });
+
+const handleSearch = (query, noLoading = false) => {
+    if (!noLoading) {
+        loadingStore.start();
+    }
+
+    searchTerm.value = query;
+    if (!query) {
+        categories.categories = allCategories.value;
+    } else {
+        const filtered = allCategories.value.filter((category) =>
+            category.name.toLowerCase().includes(query.toLowerCase())
+        );
+        categories.categories = filtered;
+    }
+
+    if (!noLoading) {
+        loadingStore.stop();
+    }
+};
+
+const fetchCategories = async () => {
+    try {
+        const response = await categoryStore.getCategories();
+        allCategories.value = response;
+        formattedCategories.value = formatCategories(response);
+    } catch (error) {
+        console.error("Error fetching categories:", error);
+    }
+};
 
 const handleDelete = async () => {
     try {

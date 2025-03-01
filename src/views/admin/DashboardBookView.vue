@@ -1,14 +1,29 @@
 <template>
     <section class="container mx-auto font-poppins">
-        <div class="bg-[#0b1220] rounded-xl p-6 mt-10">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-white">Book List</h1>
+        <!-- Bagian Pencarian di luar kotak utama -->
+        <div class="flex flex-col mt-10 mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-grow mr-4">
+                    <AdvancedSearchBar
+                        placeholder="Search book here..."
+                        @search="handleAdvancedSearch"
+                        :filters="searchFilters"
+                    />
+                </div>
                 <button
                     @click="handleAdd"
                     class="bg-yellow-500 hover:bg-yellow-600 text-[#0b1220] px-4 py-2 rounded-lg cursor-pointer transition-colors"
                 >
-                    Add Book
+                    Add Books
                 </button>
+            </div>
+            <!-- Ruang untuk filter dropdown yang akan muncul di bawah -->
+            <!-- <div class="mt-2"></div> -->
+        </div>
+
+        <div class="bg-[#0b1220] rounded-xl p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-white">Book Table</h1>
             </div>
 
             <div class="w-full overflow-x-auto">
@@ -280,11 +295,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useBookCrudStore } from "@/stores/bookCrudStore";
 import { useLoadingStore } from "@/stores/loadingStore";
 import { useAuthorStore } from "@/stores/authorStore";
 import { useCategoryStore } from "@/stores/categoryStore";
+import AdvancedSearchBar from "@/components/admin/AdvancedSearchBar.vue";
 
 const bookStore = useBookCrudStore();
 const loadingStore = useLoadingStore();
@@ -298,6 +314,7 @@ const isEditing = ref(false);
 const authors = ref([]);
 const categories = ref([]);
 const modalMode = ref("add"); // 'add', 'edit', or 'detail'
+const searchQuery = ref("");
 
 const formData = ref({
     id: null,
@@ -517,12 +534,61 @@ const handleFileChange = (event) => {
     }
 };
 
+// Computed property untuk filter pencarian
+const searchFilters = computed(() => {
+    return [
+        {
+            key: "category_id",
+            label: "Filter by Category",
+            options: categories.value.map((category) => ({
+                value: category.id,
+                label: category.name,
+            })),
+        },
+        {
+            key: "author_id",
+            label: "Filter by Author",
+            options: authors.value.map((author) => ({
+                value: author.id,
+                label: `${author.first_name} ${author.last_name}`,
+            })),
+        },
+    ];
+});
+
+// Ganti handleSearch dengan handleAdvancedSearch
+const handleAdvancedSearch = async (searchParams) => {
+    // Hanya mulai loading jika noLoading tidak true
+    if (!searchParams.noLoading) {
+        loadingStore.start();
+    }
+    try {
+        // Implementasi pencarian buku dengan filter
+        await bookStore.searchBooksAdvanced(
+            searchParams.query,
+            searchParams.filters
+        );
+        items.value = formatBooksData(bookStore.getAllBooks);
+    } catch (error) {
+        console.error("Error searching books:", error);
+    } finally {
+        // Hanya hentikan loading jika noLoading tidak true
+        if (!searchParams.noLoading) {
+            loadingStore.stop();
+        }
+    }
+};
+
 onMounted(async () => {
     loadingStore.start();
     try {
-        await bookStore.fetchBooks();
+        await Promise.all([
+            bookStore.fetchBooks(),
+            authorStore.fetchAuthors(),
+            categoryStore.getCategories(),
+        ]);
+
         items.value = formatBooksData(bookStore.getAllBooks);
-        await authorStore.fetchAuthors();
         authors.value = authorStore.getAllAuthors;
         categories.value = await categoryStore.getCategories();
     } catch (error) {

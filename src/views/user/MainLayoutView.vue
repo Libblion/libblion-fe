@@ -177,93 +177,90 @@
 </template>
 
 <script setup>
-import MainLayout from '@/layouts/MainLayout.vue';
-import ModalFormBorrow from '@/components/modal/ModalFormBorrow.vue';
-import cover2 from '@/assets/images/cover/Cover2.jpg'
-import cover3 from '@/assets/images/cover/Cover3.jpg'
-import cover5 from '@/assets/images/cover/Cover5.jpg'
-import cover6 from '@/assets/images/cover/Cover6.jpg'
-import cover7 from '@/assets/images/cover/Cover7.jpg'
-import cover8 from '@/assets/images/cover/Cover8.png'
+import MainLayout from "@/layouts/MainLayout.vue";
+import ModalFormBorrow from "@/components/modal/ModalFormBorrow.vue";
+import cover2 from "@/assets/images/cover/Cover2.jpg";
+import cover3 from "@/assets/images/cover/Cover3.jpg";
+import cover5 from "@/assets/images/cover/Cover5.jpg";
+import cover6 from "@/assets/images/cover/Cover6.jpg";
+import cover7 from "@/assets/images/cover/Cover7.jpg";
+import cover8 from "@/assets/images/cover/Cover8.png";
 
 import { bookStore } from "@/stores/bookStore";
 import { computed, onMounted, ref, watch } from "vue";
-import { useLoadingStore } from '@/stores/loadingStore';
-import { useCategoryStore } from '@/stores/categoryStore';
-import { useStore } from '@/stores/util'
+import { useLoadingStore } from "@/stores/loadingStore";
+import { useCategoryStore } from "@/stores/categoryStore";
+import { useStore } from "@/stores/util";
 
-const store = useStore()
-const storeBooks = bookStore()
-const category = useCategoryStore()
+const store = useStore();
+const storeBooks = bookStore();
+const category = useCategoryStore();
 
-const detailBooks = store.detailBooks
-const getCategories = computed(() => category.categories)
+const detailBooks = store.detailBooks;
+const getCategories = computed(() => category.categories);
 
 const books = computed(() => {
-    return storeBooks.getAllBooks
-})
+  return storeBooks.getAllBooks;
+});
 
-const errors = ref('')
+const errors = ref("");
 
-const recommend = ref([])
+const recommend = ref([]);
 
 const recommendationBooks = async () => {
-    try {
-        const response = await storeBooks.getRecommendedBooks()
-        console.log(response)
-        recommend.value = response.data
-    } catch (error) {
-        console.log(error);
-        errors.value = error.response.data.message
-    }
-}
+  try {
+    const response = await storeBooks.getRecommendedBooks();
+    console.log(response);
+    recommend.value = response.data;
+  } catch (error) {
+    console.log(error);
+    errors.value = error.response.data.message;
+  }
+};
 
-const loading = useLoadingStore()
-const isLoading = ref(false)
+const loading = useLoadingStore();
+const isLoading = ref(false);
 
 const categoryBooks = async (id) => {
-    isLoading.value = true
+  isLoading.value = true;
+  try {
+    await storeBooks.getBooks(id);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const search = ref("");
+
+watch(
+  () => search.value,
+  async () => {
     try {
-        await storeBooks.getBooks(id)
+      isLoading.value = true;
+      return await storeBooks.getBooks(null, search.value);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     } finally {
-        isLoading.value = false
+      isLoading.value = false;
     }
-}
-
-const search = ref('')
-
-watch(()=>search.value,async ()=>{
-    try {
-        isLoading.value = true
-        return await storeBooks.getBooks(null,search.value)
-    } catch (error) {
-        console.log(error);
-        
-    }finally{
-        isLoading.value = false
-    }
-})
-
+  }
+);
 
 onMounted(async () => {
-    try {
-        await Promise.all([
-            storeBooks.getBooks(),
-            recommendationBooks()
-        ]);
-    } catch (error) {
-        console.error("Error in onMounted:", error);
-    } finally {
-        loading.stop()
-    }
-})
-
+  try {
+    await Promise.all([storeBooks.getBooks(), recommendationBooks()]);
+  } catch (error) {
+    console.error("Error in onMounted:", error);
+  } finally {
+    loading.stop();
+  }
+});
 </script>
 
 <style scoped>
 ::-webkit-scrollbar {
-    width: 0px;
+  width: 0px;
 }
 </style>

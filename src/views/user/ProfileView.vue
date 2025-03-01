@@ -75,6 +75,7 @@
           </div>
         </div>
 
+        <!-- Perbaiki kode di bagian ini -->
         <div
           class="max-w-full flex flex-col h-full shadow-md p-2"
           v-if="profileStore.profile.role_id !== 3"
@@ -95,10 +96,18 @@
           >
             <template #item-actions="item">
               <button
+                v-if="item.status != 'overdue'"
                 @click="openModal(item)"
                 class="text-green-400 rounded-md px-2 py-2 shadow cursor-pointer bg-teal-50"
               >
                 Return
+              </button>
+              <button
+                v-if="item.status === 'overdue'"
+                @click="payFine(item.id)"
+                class="text-red-400 rounded-md px-2 py-2 shadow cursor-pointer bg-red-50 ml-2"
+              >
+                Return & Pay Fines
               </button>
             </template>
           </EasyDataTable>
@@ -149,6 +158,7 @@ import { useProfileStore } from "@/stores/profile";
 import { storeToRefs } from "pinia";
 import FormProfile from "@/components/Form/FormProfile.vue";
 import { toast } from "vue3-toastify";
+import { api } from "@/services/api";
 const loading = useLoadingStore();
 const profileStore = useProfileStore();
 const { profile } = storeToRefs(profileStore);
@@ -174,7 +184,7 @@ const headers = [
   },
 
   {
-    text: "Overdue",
+    text: "Status",
     value: "status",
   },
   { text: "Actions", value: "actions" },
@@ -182,7 +192,6 @@ const headers = [
 
 const isModal = ref(false);
 const dataBook = ref({});
-console.log("dataBook", dataBook);
 const openModal = (item) => {
   dataBook.value = item;
   isModal.value = true;
@@ -226,6 +235,35 @@ const tableData = computed(() => {
     book_title: borrowing.book.title,
   }));
 });
+
+const payFine = async (borrowId) => {
+  if (!borrowId) {
+    toast.error("ID peminjaman tidak valid!");
+    return;
+  }
+  try {
+    const response = await api.post(`/fine?id=${borrowId}`);
+    await snap.pay(response.data.token, {
+      onSuccess: function (result) {
+        console.log("success");
+        console.log(result);
+      },
+      onPending: function (result) {
+        console.log("pending");
+        console.log(result);
+      },
+      onError: function (result) {
+        console.log("error");
+        console.log(result);
+      },
+      onClose: function () {
+        console.log("customer closed the popup without finishing the payment");
+      },
+    });
+  } catch (error) {
+    toast.error(error);
+  }
+};
 
 onMounted(async () => {
   try {

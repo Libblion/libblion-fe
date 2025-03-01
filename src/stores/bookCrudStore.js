@@ -52,6 +52,105 @@ export const useBookCrudStore = defineStore("bookCrud", {
             }
         },
 
+        async searchBooks(searchQuery) {
+            this.isLoading = true;
+            this.error = null;
+            const authStore = useAuthStore();
+
+            try {
+                const response = await api.get("/books", {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                    params: {
+                        search: searchQuery,
+                    },
+                });
+
+                const { data } = response.data;
+
+                this.books = {
+                    data: data.map((book) => ({
+                        ...book,
+                        author: book.author
+                            ? `${book.author.first_name} ${book.author.last_name}`
+                            : "Unknown Author",
+                        category: book.category
+                            ? book.category.name
+                            : "Unknown Category",
+                    })),
+                };
+
+                return response.data;
+            } catch (error) {
+                this.error =
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Failed to search books";
+                toast.error(this.error);
+                throw error;
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
+        async searchBooksAdvanced(searchQuery, filters = {}) {
+            this.isLoading = true;
+            this.error = null;
+            const authStore = useAuthStore();
+
+            try {
+                // Buat parameter pencarian
+                const params = {};
+
+                // Tambahkan query pencarian jika ada
+                if (searchQuery) {
+                    params.search = searchQuery;
+                }
+
+                // Tambahkan filter jika ada
+                if (filters) {
+                    Object.keys(filters).forEach((key) => {
+                        if (filters[key]) {
+                            params[key] = filters[key];
+                        }
+                    });
+                }
+
+                const response = await api.get("/books", {
+                    headers: {
+                        Authorization: `Bearer ${authStore.token}`,
+                    },
+                    params,
+                });
+
+                const { data } = response.data;
+
+                this.books = {
+                    data: data.map((book) => ({
+                        ...book,
+                        author: book.author
+                            ? `${book.author.first_name} ${book.author.last_name}`
+                            : "Unknown Author",
+                        category: book.category
+                            ? book.category.name
+                            : "Unknown Category",
+                    })),
+                };
+
+                return response.data;
+            } catch (error) {
+                this.error =
+                    error.response?.data?.message ||
+                    error.message ||
+                    "Failed to search books";
+                toast.error(this.error);
+                throw error;
+            } finally {
+                this.isLoading = false;
+            }
+        },
+
         async addBook(payload) {
             this.isLoading = true;
             this.error = null;

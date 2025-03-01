@@ -1,8 +1,23 @@
 <template>
     <section class="container mx-auto font-poppins">
-        <div class="bg-[#0b1220] rounded-xl p-6 mt-10">
+        <!-- Bagian Pencarian di luar kotak utama -->
+        <div class="flex flex-col mt-10 mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex-grow">
+                    <AdvancedSearchBar
+                        placeholder="Search borrowing here..."
+                        @search="handleAdvancedSearch"
+                        :filters="borrowingFilters"
+                    />
+                </div>
+            </div>
+            <!-- Ruang untuk filter dropdown yang akan muncul di bawah -->
+            <!-- <div class="mt-2"></div> -->
+        </div>
+
+        <div class="bg-[#0b1220] rounded-xl p-6">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-3xl font-bold text-white">Borrowing List</h1>
+                <h1 class="text-3xl font-bold text-white">Borrowing Table</h1>
             </div>
 
             <div class="w-full overflow-x-auto">
@@ -21,7 +36,7 @@
                     </template>
                     <template #item-actions="props">
                         <button
-                            @click="openModal(props.id)"
+                            @click="openApproveModal(props.id)"
                             class="text-green-400 rounded-xl px-2 shadow cursor-pointer"
                         >
                             <font-awesome-icon icon="fa-solid fa-check" />
@@ -31,34 +46,15 @@
             </div>
         </div>
 
-        <div
-            v-if="isOpenModal"
-            class="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-sm"
-        >
-            <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h3 class="text-lg font-semibold text-gray-800">
-                    Konfirmasi Approve
-                </h3>
-                <p class="text-gray-600 mt-2">
-                    Apakah Anda yakin ingin menyetujui peminjaman buku ini?
-                </p>
-
-                <div class="mt-4 flex justify-end space-x-3">
-                    <button
-                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                        @click="handleApprove"
-                    >
-                        Iya
-                    </button>
-                    <button
-                        @click="closeModal"
-                        class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
-                    >
-                        Batal
-                    </button>
-                </div>
-            </div>
-        </div>
+        <!-- Menggunakan komponen ModalApprove -->
+        <ModalApprove
+            ref="approveModal"
+            title="Konfirmasi Approve"
+            message="Apakah Anda yakin ingin menyetujui peminjaman buku ini?"
+            confirmText="Iya"
+            cancelText="Batal"
+            @confirm="handleApprove"
+        />
     </section>
 </template>
 
@@ -66,9 +62,12 @@
 import { api } from "@/services/api";
 import { useAuthStore } from "@/stores/auth";
 import { useLoadingStore } from "@/stores/loadingStore";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { onMounted } from "vue";
 import { toast } from "vue3-toastify";
+import AdvancedSearchBar from "@/components/admin/AdvancedSearchBar.vue";
+import { userBorrowStore } from "@/stores/borrowStore";
+import ModalApprove from "@/components/modal/ModalApprove.vue";
 
 const headers = [
     { text: "No.", value: "index" },
@@ -104,19 +103,30 @@ const headers = [
 ];
 
 const items = ref([]);
-const isOpenModal = ref(false);
-const selectedBorrowingId = ref(null);
+const approveModal = ref(null);
 const loading = useLoadingStore();
-
+const borrowingStore = userBorrowStore();
 const stores = useAuthStore();
 
-const openModal = (id) => {
-    isOpenModal.value = true;
-    selectedBorrowingId.value = id;
-};
+// Definisi filter untuk pencarian
+const borrowingFilters = computed(() => [
+    {
+        key: "status",
+        label: "Filter by Status",
+        options: [
+            { value: "pending", label: "Pending" },
+            { value: "approved", label: "Approved" },
+            { value: "returned", label: "Returned" },
+            { value: "rejected", label: "Rejected" },
+        ],
+    },
+]);
 
-const closeModal = () => {
-    isOpenModal.value = false;
+const searchQuery = ref("");
+const allBorrowings = ref([]);
+
+const openApproveModal = (id) => {
+    approveModal.value.open(id);
 };
 
 const formatBorrowingData = (borrowings) => {
@@ -141,7 +151,7 @@ const handleGetBorrowing = async () => {
     }
 };
 
-const handleApprove = async () => {
+const handleApprove = async (id) => {
     const payload = {
         status: "approved",
         approved_by: stores.currentUser.id,
@@ -149,7 +159,7 @@ const handleApprove = async () => {
 
     try {
         const response = await api.put(
-            `/borrowings/${selectedBorrowingId.value}/aproved_by`,
+            `/borrowings/${id}/aproved_by`,
             payload,
             {
                 headers: {
@@ -158,15 +168,14 @@ const handleApprove = async () => {
             }
         );
 
-        const index = items.value.findIndex(
-            (item) => item.id === selectedBorrowingId.value
-        );
+        const index = items.value.findIndex((item) => item.id === id);
 
         if (index !== -1) {
             items.value[index].status = "approved";
+            items.value[index].approved_by = {
+                username: stores.currentUser.username,
+            };
         }
-
-        closeModal();
 
         toast.success(response.data.message);
     } catch (error) {
@@ -174,8 +183,46 @@ const handleApprove = async () => {
     }
 };
 
-onMounted(() => {
-    handleGetBorrowing();
+const handleAdvancedSearch = async (searchParams) => {
+    // Mulai loading kecuali jika noLoading diset true
+    if (!searchParams.noLoading) {
+        loading.start();
+    }
+
+    try {
+        console.log("Search params:", searchParams); // Debugging
+
+        // Panggil fungsi searchBorrowings dari store
+        await borrowingStore.searchBorrowings(
+            searchParams.query,
+            searchParams.filters
+        );
+
+        // Update tampilan dengan hasil pencarian
+        items.value = formatBorrowingData(borrowingStore.getAllBorrowings);
+    } catch (error) {
+        console.error("Error searching borrowings:", error);
+        toast.error("Gagal melakukan pencarian");
+    } finally {
+        // Hentikan loading kecuali jika noLoading diset true
+        if (!searchParams.noLoading) {
+            loading.stop();
+        }
+    }
+};
+
+onMounted(async () => {
+    loading.start();
+    try {
+        await borrowingStore.fetchBorrowings();
+        items.value = formatBorrowingData(borrowingStore.getAllBorrowings);
+        allBorrowings.value = [...items.value];
+    } catch (error) {
+        console.error("Error fetching borrowings:", error);
+        toast.error("Gagal memuat data peminjaman");
+    } finally {
+        loading.stop();
+    }
 });
 </script>
 

@@ -39,7 +39,7 @@
                 v-else
             >
                 <img
-                    :src="i % 2 !== 0 ? cover2 : cover3"
+                    :src="book.cover_image"
                     alt="Darkness"
                     class="w-full h-full object-cover"
                 />

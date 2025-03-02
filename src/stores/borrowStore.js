@@ -71,5 +71,16 @@ export const userBorrowStore = defineStore("borrows", {
                 throw error;
             }
         },
+        async updateBorrow (id,payload){
+            try {
+                const response = await api.post(`/borrowings/${id}`,{
+                    "_method" : "PUT",
+                    ...payload
+                })
+                return response.data
+            } catch (error) {
+                throw error
+            }
+        }
     },
 });

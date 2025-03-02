@@ -27,24 +27,6 @@
                         <div class="pl-2 text-[10px] sm:text-[14px]">
                             <p>
                                 <span>
-                                    Page
-                                </span>
-                                :
-                                <span>
-                                    {{ borrowed.totalPage }}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    Language
-                                </span>
-                                :
-                                <span>
-                                    {{ borrowed.lang }}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
                                     Year
                                 </span>
                                 :
@@ -250,7 +232,7 @@ watch(
 
 onMounted(async () => {
   try {
-    await Promise.all([storeBooks.getBooks(), recommendationBooks()]);
+    await Promise.all([storeBooks.getBooks(), recommendationBooks(),category.getCategories()]);
   } catch (error) {
     console.error("Error in onMounted:", error);
   } finally {

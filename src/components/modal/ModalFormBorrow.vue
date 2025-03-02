@@ -35,15 +35,10 @@
                 <div v-if="isLogged" class="w-full flex gap-y-2 flex-col">
                     <h1 class="text-center border-b p-1">Your Information</h1>
                     <div class="text-sm flex flex-col gap-y-1">
-                        <div>
-                            <label for="fname">Full Name</label>
-                            <input
-                                v-model="username"
-                                type="text"
-                                id="fname"
-                                class="border border-slate-700 ml-2 rounded-sm focus:outline-none p-1"
-                            />
-                        </div>
+                        <h1>
+                            <span class="font-bold">Username</span>
+                            : {{ username }}
+                        </h1>
                         <h1>
                             <span class="font-bold">Email</span>
                             : {{ currentUser.email }}

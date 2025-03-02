@@ -338,6 +338,6 @@ export const useBookCrudStore = defineStore("bookCrud", {
     },
 
     persist: {
-        paths: ["books", "detailBook"],
+        pick: ["books", "detailBook"],
     },
 });

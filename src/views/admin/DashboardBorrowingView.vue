@@ -35,12 +35,17 @@
                         {{ new Date(created_at).toLocaleDateString() }}
                     </template>
                     <template #item-actions="props">
-                        <button
+                        <button v-if="props.status !== 'approved'"
                             @click="openApproveModal(props.id)"
                             class="text-green-400 rounded-xl px-2 shadow cursor-pointer"
                         >
                             <font-awesome-icon icon="fa-solid fa-check" />
                         </button>
+                    </template>
+                    <template #item-status="{status}">
+                        <p :class="status =='approved' ? 'text-green-400' : 'text-yellow-300'">
+                            {{ status }}
+                        </p>
                     </template>
                 </EasyDataTable>
             </div>

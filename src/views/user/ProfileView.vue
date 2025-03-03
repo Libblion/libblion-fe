@@ -332,7 +332,7 @@ const handleReturnBook = async () => {
   const payload = reactive({
     user_id: auth.currentUser.id,
     book_id: dataBook.value.book_id,
-    status: "approved",
+    status: "returned",
     return_date: new Date().toISOString().slice(0, 19).replace("T", " "),
   });
   try {
@@ -350,6 +350,8 @@ const handleReturnBook = async () => {
 
 const payFine = async (borrowItem) => {
   dataBook.value = borrowItem;
+  console.log(dataBook.value);
+  
   if (!borrowItem.id) {
     toast.error("ID peminjaman tidak valid!");
     return;
